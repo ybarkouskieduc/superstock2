@@ -1,0 +1,14 @@
+server:
+    port: 8082
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:3306/superstock?useUnicode=yes&serverTimezone=UTC
+        username: konsus
+        password: konsus
+        driver-class-name: com.mysql.jdbc.Driver
+    flyway:
+        url: jdbc:mysql://localhost:3306/superstock?useUnicode=yes&serverTimezone=UTC
+        user: konsus
+        password: konsus
+        baselineOnMigrate: true
+        driver-class-name: com.mysql.jdbc.Driver
