@@ -71,6 +71,7 @@
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/model/stock/StockAccount.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/job/StockExchangeExecutionJob.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/jooq/bank/BankExchangeTransactionJooqRepository.java
+/Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/controller/UserFlowController.java
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/Account.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/jooq/user/UserJooqRepository.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/request/bank/review/CreateBankReviewRequest.java

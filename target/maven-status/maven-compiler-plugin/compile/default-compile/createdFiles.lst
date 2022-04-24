@@ -25,6 +25,7 @@ com/wldrmnd/superstock/request/bank/review/CreateBankReviewRequest$CreateBankRev
 com/wldrmnd/superstock/request/user/UpdateUserRequest.class
 com/wldrmnd/superstock/mapper/bank/BankMapper.class
 com/wldrmnd/superstock/request/stock/price/CreateStockPriceRequest$CreateStockPriceRequestBuilder.class
+com/wldrmnd/superstock/controller/UserFlowController.class
 com/wldrmnd/superstock/jooq/bank/AccountJooqRepository.class
 com/wldrmnd/superstock/jooq/user/UserJooqRepository.class
 com/wldrmnd/superstock/request/user/CreateUserRequest.class
