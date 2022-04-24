@@ -1,15 +1,18 @@
-package com.wldrmnd.superstockPrice.controller.stockPrice;
+package com.wldrmnd.superstock.controller.stock;
 
+import com.wldrmnd.superstock.exception.StockPriceIsNotExistsException;
 import com.wldrmnd.superstock.mapper.stock.StockPriceMapper;
 import com.wldrmnd.superstock.model.stock.StockPrice;
 import com.wldrmnd.superstock.request.stock.price.CreateStockPriceRequest;
 import com.wldrmnd.superstock.request.stock.price.FindStockPriceRequest;
 import com.wldrmnd.superstock.service.stock.StockPriceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,9 +23,16 @@ public class StockPriceController {
     private final StockPriceService stockPriceService;
     private final StockPriceMapper stockPriceMapper;
 
-    @GetMapping("/find")
-    public StockPrice findById(@RequestBody FindStockPriceRequest request) {
-        return stockPriceMapper.toModel(stockPriceService.find(request).stream().findFirst().get());
+    @GetMapping(value = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
+    public StockPrice findById(
+            @RequestParam(required = false) Long stockId,
+            @RequestParam(required = false) boolean lastStockPrice
+    ) {
+        return stockPriceMapper.toModel(stockPriceService.find(FindStockPriceRequest.builder()
+                .stockId(stockId)
+                .lastStockPrice(lastStockPrice)
+                .build()
+        ).stream().findFirst().orElseThrow(() -> new StockPriceIsNotExistsException(stockId)));
     }
 
     @PostMapping("/create")

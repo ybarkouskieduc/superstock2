@@ -6,9 +6,11 @@ import com.wldrmnd.superstock.request.bank.CreateBankRequest;
 import com.wldrmnd.superstock.request.bank.FindBankRequest;
 import com.wldrmnd.superstock.service.bank.BankService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,9 +31,18 @@ public class BankController {
         ).stream().map(bankMapper::toModel).toList();
     }
 
-    @GetMapping("/find")
-    public List<Bank> find(FindBankRequest request) {
-        return bankService.find(request).stream().map(bankMapper::toModel).toList();
+    @GetMapping(value = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Bank> find(
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false, defaultValue = "false") boolean loadAllOnEmptyCriteria
+    ) {
+        return bankService.find(FindBankRequest.builder()
+                .id(id)
+                .name(name)
+                .findAllOnEmptyCriteria(loadAllOnEmptyCriteria)
+                .build()
+        ).stream().map(bankMapper::toModel).toList();
     }
 
     @PostMapping("/create")

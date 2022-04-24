@@ -8,18 +8,22 @@ import com.wldrmnd.superstock.request.user.LoginUserRequest;
 import com.wldrmnd.superstock.request.user.UpdateUserRequest;
 import com.wldrmnd.superstock.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user")
+@RequestMapping(value = "/api/v1/user")
 public class UserController {
 
     private final UserService userService;
@@ -30,9 +34,18 @@ public class UserController {
         return userService.findAll().stream().map(userRecordMapper::toModel).toList();
     }
 
-    @GetMapping("/find")
-    public User findById(@RequestBody FindUserRequest request) {
-        return userRecordMapper.toModel(userService.find(request).stream().findFirst().get());
+    @GetMapping(value = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
+    public User find(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false, defaultValue = "false") boolean loadAllOnEmptyCriteria
+    ) {
+        return userRecordMapper.toModel(userService.find(FindUserRequest.builder()
+                .username(username)
+                .userId(userId)
+                .findAllOnEmptyCriteria(loadAllOnEmptyCriteria)
+                .build()
+        ).stream().findFirst().orElseThrow(() -> new IllegalArgumentException("User is not found.")));
     }
 
     @PostMapping("/create")
@@ -45,7 +58,7 @@ public class UserController {
         return userRecordMapper.toModel(userService.update(request));
     }
 
-    @GetMapping("/login")
+    @PostMapping(value = "/login")
     public User login(@RequestBody LoginUserRequest request) {
         return userRecordMapper.toModel(userService.login(request));
     }

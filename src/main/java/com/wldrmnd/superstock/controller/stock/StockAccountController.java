@@ -1,16 +1,18 @@
 package com.wldrmnd.superstock.controller.stock;
 
+import com.wldrmnd.superstock.exception.UserAccountNotFoundException;
 import com.wldrmnd.superstock.mapper.stock.StockAccountMapper;
-import com.wldrmnd.superstock.model.stock.Stock;
 import com.wldrmnd.superstock.model.stock.StockAccount;
 import com.wldrmnd.superstock.request.stock.account.CreateStockAccountRequest;
 import com.wldrmnd.superstock.request.stock.account.FindStockAccountRequest;
 import com.wldrmnd.superstock.service.stock.StockAccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,9 +23,18 @@ public class StockAccountController {
     private final StockAccountService stockAccountService;
     private final StockAccountMapper stockAccountMapper;
 
-    @GetMapping("/find")
-    public StockAccount findById(@RequestBody FindStockAccountRequest request) {
-        return stockAccountMapper.toModel(stockAccountService.find(request).stream().findFirst().get());
+    @GetMapping(value = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
+    public StockAccount findById(
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) Long stockId,
+            @RequestParam(required = false) Long userId
+            ) {
+        return stockAccountMapper.toModel(stockAccountService.find(FindStockAccountRequest.builder()
+                .id(id)
+                .stockId(stockId)
+                .userId(userId)
+                .build()
+        ).stream().findFirst().orElseThrow(() -> new UserAccountNotFoundException(userId, stockId)));
     }
 
     @PostMapping("/create")
