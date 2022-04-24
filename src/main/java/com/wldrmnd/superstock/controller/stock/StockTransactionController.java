@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/stock/transaction")
@@ -21,20 +24,20 @@ public class StockTransactionController {
     private final StockTransactionMapper stockTransactionMapper;
 
     @GetMapping(value = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
-    public StockTransaction find(
+    public List<StockTransaction> find(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) Long stockId,
             @RequestParam(required = false) Long stockPriceId,
             @RequestParam(required = false) StockTransactionGoal stockTransactionGoal
     ) {
-        return stockTransactionMapper.toModel(stockTransactionService.find(FindStockTransactionRequest.builder()
+        return stockTransactionService.find(FindStockTransactionRequest.builder()
                 .id(id)
                 .stockId(stockId)
                 .stockPriceId(stockPriceId)
                 .userId(userId)
                 .goal(stockTransactionGoal)
                 .build()
-        ).stream().findFirst().orElseThrow(() -> new IllegalArgumentException("Stock transaction is not found.")));
+        ).stream().map(stockTransactionMapper::toModel).collect(Collectors.toList());
     }
 }

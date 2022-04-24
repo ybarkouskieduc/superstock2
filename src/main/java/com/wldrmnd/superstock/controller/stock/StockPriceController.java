@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/stock/price")
@@ -24,15 +26,15 @@ public class StockPriceController {
     private final StockPriceMapper stockPriceMapper;
 
     @GetMapping(value = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
-    public StockPrice findById(
+    public List<StockPrice> findById(
             @RequestParam(required = false) Long stockId,
             @RequestParam(required = false) boolean lastStockPrice
     ) {
-        return stockPriceMapper.toModel(stockPriceService.find(FindStockPriceRequest.builder()
+        return stockPriceService.find(FindStockPriceRequest.builder()
                 .stockId(stockId)
                 .lastStockPrice(lastStockPrice)
                 .build()
-        ).stream().findFirst().orElseThrow(() -> new StockPriceIsNotExistsException(stockId)));
+        ).stream().map(stockPriceMapper::toModel).toList();
     }
 
     @PostMapping("/create")
