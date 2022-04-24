@@ -92,6 +92,7 @@
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/controller/bank/BankExchangeController.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/model/stock/StockTransaction.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/exception/StockPriceIsNotExistsException.java
+/Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/config/CorsFilter.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/mapper/stock/StockStatisticMapper.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/jooq/bank/BankExchangeJooqRepository.java
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/records/FlywaySchemaHistoryRecord.java

@@ -69,6 +69,7 @@ com/wldrmnd/superstock/model/stock/StockAccount.class
 com/wldrmnd/superstock/request/account/FindAccountRequest$FindAccountRequestBuilder.class
 com/wldrmnd/superstock/request/account/UpdateAccountRequest$UpdateAccountRequestBuilder.class
 com/wldrmnd/superstock/domain/Tables.class
+com/wldrmnd/superstock/config/CorsFilter.class
 com/wldrmnd/superstock/domain/tables/records/UserRecord.class
 com/wldrmnd/superstock/request/bank/review/FindBankReviewRequest$FindBankReviewRequestBuilder.class
 com/wldrmnd/superstock/service/UserFlowService.class
