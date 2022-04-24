@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/stock/account")
@@ -24,17 +26,17 @@ public class StockAccountController {
     private final StockAccountMapper stockAccountMapper;
 
     @GetMapping(value = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
-    public StockAccount findById(
+    public List<StockAccount> findById(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) Long stockId,
             @RequestParam(required = false) Long userId
-            ) {
-        return stockAccountMapper.toModel(stockAccountService.find(FindStockAccountRequest.builder()
+    ) {
+        return stockAccountService.find(FindStockAccountRequest.builder()
                 .id(id)
                 .stockId(stockId)
                 .userId(userId)
                 .build()
-        ).stream().findFirst().orElseThrow(() -> new UserAccountNotFoundException(userId, stockId)));
+        ).stream().map(stockAccountMapper::toModel).toList();
     }
 
     @PostMapping("/create")
