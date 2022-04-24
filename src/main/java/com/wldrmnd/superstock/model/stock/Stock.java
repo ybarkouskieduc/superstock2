@@ -3,6 +3,7 @@ package com.wldrmnd.superstock.model.stock;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 public class Stock implements Serializable {
@@ -11,4 +12,5 @@ public class Stock implements Serializable {
     private String name;
     private String sign;
     private String description;
+    private BigDecimal currentStockPrice;
 }
