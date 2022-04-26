@@ -55,6 +55,22 @@ public class ExchangeStockRequestJooqRepository {
                 .fetchInto(ExchangeStockRequestRecord.class);
     }
 
+    public List<ExchangeStockRequestRecord> findAllPending(Long userId) {
+        return dslContext.select()
+                .from(EXCHANGE_STOCK_REQUEST)
+                .where(EXCHANGE_STOCK_REQUEST.EXECUTED_AT.isNull())
+                .and(EXCHANGE_STOCK_REQUEST.USER_ID.eq(userId))
+                .fetchInto(ExchangeStockRequestRecord.class);
+    }
+
+    public List<ExchangeStockRequestRecord> findAllComplete(Long userId) {
+        return dslContext.select()
+                .from(EXCHANGE_STOCK_REQUEST)
+                .where(EXCHANGE_STOCK_REQUEST.EXECUTED_AT.isNotNull())
+                .and(EXCHANGE_STOCK_REQUEST.USER_ID.eq(userId))
+                .fetchInto(ExchangeStockRequestRecord.class);
+    }
+
     public ExchangeStockRequestRecord markExecuted(Long exchangeStockRequestId) {
         ExchangeStockRequestRecord exchangeStockRequestRecord = findById(exchangeStockRequestId);
 

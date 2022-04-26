@@ -5,6 +5,7 @@
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/User.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/model/bank/Currency.java
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/records/StockAccountRecord.java
+/Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/mapper/stock/ExchangeStockRequestMapper.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/exception/UserAccountNotFoundException.java
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/BankExchangeTransaction.java
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/DefaultCatalog.java
@@ -68,6 +69,7 @@
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/service/stock/StockStatisticService.java
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/records/StockTransactionRecord.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/request/bank/exchange/CreateBankExchangeTransactionRequest.java
+/Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/controller/stock/ExchangeStockRequestController.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/model/stock/StockAccount.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/job/StockExchangeExecutionJob.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/jooq/bank/BankExchangeTransactionJooqRepository.java
@@ -78,6 +80,7 @@
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/exception/BankExchangeNotFoundException.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/model/bank/BankExchangeTransaction.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/request/user/UpdateUserRequest.java
+/Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/model/stock/ExchangeStockRequestModel.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/request/stock/ExchangeStockRequest.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/jooq/bank/BankReviewJooqRepository.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/service/stock/StockPriceService.java
