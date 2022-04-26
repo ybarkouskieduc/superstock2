@@ -77,7 +77,7 @@ public class StockTransactionJooqRepository {
             condition = condition.and(STOCK_TRANSACTION.ID.eq(request.getId()));
         }
         if (request.getUserId() != null) {
-            condition = condition.and(STOCK_TRANSACTION.USER_ID.eq(request.getId()));
+            condition = condition.and(STOCK_TRANSACTION.USER_ID.eq(request.getUserId()));
         }
         if (request.getStockId() != null) {
             condition = condition.and(STOCK_TRANSACTION.STOCK_ID.eq(request.getStockId()));
