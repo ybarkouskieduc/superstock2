@@ -6,11 +6,13 @@ package com.wldrmnd.superstock.domain;
 
 import com.wldrmnd.superstock.domain.tables.Account;
 import com.wldrmnd.superstock.domain.tables.BankExchange;
+import com.wldrmnd.superstock.domain.tables.BankExchangeTransaction;
 import com.wldrmnd.superstock.domain.tables.ExchangeStockRequest;
 import com.wldrmnd.superstock.domain.tables.FlywaySchemaHistory;
 import com.wldrmnd.superstock.domain.tables.StockAccount;
 import com.wldrmnd.superstock.domain.tables.StockPrice;
 import com.wldrmnd.superstock.domain.tables.StockStatistic;
+import com.wldrmnd.superstock.domain.tables.StockTransaction;
 
 import org.jooq.Index;
 import org.jooq.OrderField;
@@ -29,12 +31,17 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     public static final Index BANK_EXCHANGE_BANK_ID = Internal.createIndex(DSL.name("bank_id"), BankExchange.BANK_EXCHANGE, new OrderField[] { BankExchange.BANK_EXCHANGE.BANK_ID }, false);
+    public static final Index BANK_EXCHANGE_TRANSACTION_BANK_ID = Internal.createIndex(DSL.name("bank_id"), BankExchangeTransaction.BANK_EXCHANGE_TRANSACTION, new OrderField[] { BankExchangeTransaction.BANK_EXCHANGE_TRANSACTION.BANK_ID }, false);
     public static final Index FLYWAY_SCHEMA_HISTORY_FLYWAY_SCHEMA_HISTORY_S_IDX = Internal.createIndex(DSL.name("flyway_schema_history_s_idx"), FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, new OrderField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.SUCCESS }, false);
     public static final Index EXCHANGE_STOCK_REQUEST_STOCK_ID = Internal.createIndex(DSL.name("stock_id"), ExchangeStockRequest.EXCHANGE_STOCK_REQUEST, new OrderField[] { ExchangeStockRequest.EXCHANGE_STOCK_REQUEST.STOCK_ID }, false);
     public static final Index STOCK_ACCOUNT_STOCK_ID = Internal.createIndex(DSL.name("stock_id"), StockAccount.STOCK_ACCOUNT, new OrderField[] { StockAccount.STOCK_ACCOUNT.STOCK_ID }, false);
     public static final Index STOCK_PRICE_STOCK_ID = Internal.createIndex(DSL.name("stock_id"), StockPrice.STOCK_PRICE, new OrderField[] { StockPrice.STOCK_PRICE.STOCK_ID }, false);
     public static final Index STOCK_STATISTIC_STOCK_ID = Internal.createIndex(DSL.name("stock_id"), StockStatistic.STOCK_STATISTIC, new OrderField[] { StockStatistic.STOCK_STATISTIC.STOCK_ID }, false);
+    public static final Index STOCK_TRANSACTION_STOCK_ID = Internal.createIndex(DSL.name("stock_id"), StockTransaction.STOCK_TRANSACTION, new OrderField[] { StockTransaction.STOCK_TRANSACTION.STOCK_ID }, false);
+    public static final Index STOCK_TRANSACTION_STOCK_PRICE_ID = Internal.createIndex(DSL.name("stock_price_id"), StockTransaction.STOCK_TRANSACTION, new OrderField[] { StockTransaction.STOCK_TRANSACTION.STOCK_PRICE_ID }, false);
     public static final Index ACCOUNT_USER_ID = Internal.createIndex(DSL.name("user_id"), Account.ACCOUNT, new OrderField[] { Account.ACCOUNT.USER_ID }, false);
+    public static final Index BANK_EXCHANGE_TRANSACTION_USER_ID = Internal.createIndex(DSL.name("user_id"), BankExchangeTransaction.BANK_EXCHANGE_TRANSACTION, new OrderField[] { BankExchangeTransaction.BANK_EXCHANGE_TRANSACTION.USER_ID }, false);
     public static final Index EXCHANGE_STOCK_REQUEST_USER_ID = Internal.createIndex(DSL.name("user_id"), ExchangeStockRequest.EXCHANGE_STOCK_REQUEST, new OrderField[] { ExchangeStockRequest.EXCHANGE_STOCK_REQUEST.USER_ID }, false);
     public static final Index STOCK_ACCOUNT_USER_ID = Internal.createIndex(DSL.name("user_id"), StockAccount.STOCK_ACCOUNT, new OrderField[] { StockAccount.STOCK_ACCOUNT.USER_ID }, false);
+    public static final Index STOCK_TRANSACTION_USER_ID = Internal.createIndex(DSL.name("user_id"), StockTransaction.STOCK_TRANSACTION, new OrderField[] { StockTransaction.STOCK_TRANSACTION.USER_ID }, false);
 }

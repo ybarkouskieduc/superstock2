@@ -4,6 +4,7 @@
 package com.wldrmnd.superstock.domain.tables;
 
 
+import com.wldrmnd.superstock.domain.Indexes;
 import com.wldrmnd.superstock.domain.Keys;
 import com.wldrmnd.superstock.domain.Superstock;
 import com.wldrmnd.superstock.domain.enums.StockTransactionGoal;
@@ -11,10 +12,13 @@ import com.wldrmnd.superstock.domain.tables.records.StockTransactionRecord;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Row8;
@@ -130,6 +134,11 @@ public class StockTransaction extends TableImpl<StockTransactionRecord> {
     }
 
     @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.STOCK_TRANSACTION_STOCK_ID, Indexes.STOCK_TRANSACTION_STOCK_PRICE_ID, Indexes.STOCK_TRANSACTION_USER_ID);
+    }
+
+    @Override
     public Identity<StockTransactionRecord, Long> getIdentity() {
         return (Identity<StockTransactionRecord, Long>) super.getIdentity();
     }
@@ -137,6 +146,46 @@ public class StockTransaction extends TableImpl<StockTransactionRecord> {
     @Override
     public UniqueKey<StockTransactionRecord> getPrimaryKey() {
         return Keys.KEY_STOCK_TRANSACTION_PRIMARY;
+    }
+
+    @Override
+    public List<ForeignKey<StockTransactionRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.STOCK_TRANSACTION_IBFK_1, Keys.STOCK_TRANSACTION_IBFK_2, Keys.STOCK_TRANSACTION_IBFK_3);
+    }
+
+    private transient Stock _stock;
+    private transient User _user;
+    private transient StockPrice _stockPrice;
+
+    /**
+     * Get the implicit join path to the <code>superstock.stock</code> table.
+     */
+    public Stock stock() {
+        if (_stock == null)
+            _stock = new Stock(this, Keys.STOCK_TRANSACTION_IBFK_1);
+
+        return _stock;
+    }
+
+    /**
+     * Get the implicit join path to the <code>superstock.user</code> table.
+     */
+    public User user() {
+        if (_user == null)
+            _user = new User(this, Keys.STOCK_TRANSACTION_IBFK_2);
+
+        return _user;
+    }
+
+    /**
+     * Get the implicit join path to the <code>superstock.stock_price</code>
+     * table.
+     */
+    public StockPrice stockPrice() {
+        if (_stockPrice == null)
+            _stockPrice = new StockPrice(this, Keys.STOCK_TRANSACTION_IBFK_3);
+
+        return _stockPrice;
     }
 
     @Override
