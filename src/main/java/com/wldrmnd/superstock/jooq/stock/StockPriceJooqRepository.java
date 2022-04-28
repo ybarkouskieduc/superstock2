@@ -57,6 +57,10 @@ public class StockPriceJooqRepository {
     private Condition generateWhereCondition(FindStockPriceRequest request) {
         Condition condition = noCondition();
 
+        if (request.getId() != null) {
+            condition = condition.and(STOCK_PRICE.ID.eq(request.getId()));
+        }
+
         if (request.getStockId() != null) {
             condition = condition.and(STOCK_PRICE.STOCK_ID.eq(request.getStockId()));
         }

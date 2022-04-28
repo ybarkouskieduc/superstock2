@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public class FindStockPriceRequest {
 
+    private Long id;
     private Long stockId;
     private boolean lastStockPrice;
 }

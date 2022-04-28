@@ -14,6 +14,7 @@ public class StockTransaction implements Serializable {
     private Long stockId;
     private Long userId;
     private Long stockPriceId;
+    private BigDecimal stockPrice;
     private BigDecimal amount;
     private Timestamp createdAt;
     private Timestamp revertedAt;

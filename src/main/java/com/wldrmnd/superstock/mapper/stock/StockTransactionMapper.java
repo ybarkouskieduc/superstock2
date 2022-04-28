@@ -4,6 +4,7 @@ import com.wldrmnd.superstock.domain.tables.records.StockTransactionRecord;
 import com.wldrmnd.superstock.model.stock.StockTransaction;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.ReportingPolicy;
 
@@ -15,5 +16,6 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface StockTransactionMapper {
 
+    @Mapping(target = "stockPrice", ignore = true)
     StockTransaction toModel(StockTransactionRecord record);
 }

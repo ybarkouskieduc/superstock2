@@ -3,7 +3,9 @@ package com.wldrmnd.superstock.controller.stock;
 import com.wldrmnd.superstock.domain.enums.StockTransactionGoal;
 import com.wldrmnd.superstock.mapper.stock.StockTransactionMapper;
 import com.wldrmnd.superstock.model.stock.StockTransaction;
+import com.wldrmnd.superstock.request.stock.price.FindStockPriceRequest;
 import com.wldrmnd.superstock.request.stock.transaction.FindStockTransactionRequest;
+import com.wldrmnd.superstock.service.stock.StockPriceService;
 import com.wldrmnd.superstock.service.stock.StockTransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class StockTransactionController {
 
     private final StockTransactionService stockTransactionService;
+    private final StockPriceService stockPriceService;
     private final StockTransactionMapper stockTransactionMapper;
 
     @GetMapping(value = "/find", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,6 +41,13 @@ public class StockTransactionController {
                 .userId(userId)
                 .goal(stockTransactionGoal)
                 .build()
-        ).stream().map(stockTransactionMapper::toModel).collect(Collectors.toList());
+        ).stream().map(it -> {
+            StockTransaction stockTransaction = stockTransactionMapper.toModel(it);
+            stockTransaction.setStockPrice(stockPriceService.find(FindStockPriceRequest.builder()
+                    .id(stockTransaction.getStockPriceId())
+                    .build()).get(0).getPrice()
+            );
+            return stockTransaction;
+        }).collect(Collectors.toList());
     }
 }

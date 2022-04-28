@@ -1,6 +1,5 @@
 package com.wldrmnd.superstock.controller.stock;
 
-import com.wldrmnd.superstock.exception.UserAccountNotFoundException;
 import com.wldrmnd.superstock.mapper.stock.StockAccountMapper;
 import com.wldrmnd.superstock.model.stock.StockAccount;
 import com.wldrmnd.superstock.request.stock.account.CreateStockAccountRequest;
