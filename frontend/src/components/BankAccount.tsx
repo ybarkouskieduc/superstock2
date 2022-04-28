@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -16,12 +16,171 @@ import {
 
 import { useUserAccount, useUserId } from "../lib";
 import {
+  useAccountCreate,
+  useAccountFind,
   useBank,
   useBankExchange,
-  useBankExchangeFind,
   useBankReviewFind,
+  useCreteBankReview,
   useUserExchangeCurrency,
 } from "../queries";
+
+const useFreeCurrencies = () => {
+  const [userId] = useUserId();
+
+  const currencies = useMemo(() => ["USD", "BYN"], []);
+
+  const { data: accounts = [] } = useAccountFind({
+    userId: userId as number,
+  });
+
+  return currencies.filter(
+    (currency) => !accounts.map(({ currency }) => currency).includes(currency)
+  );
+};
+
+const CreateBankReview: React.FC<{ bankId?: number }> = ({ bankId }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    setRate(4);
+    setReview("");
+  };
+
+  const [userId] = useUserId();
+
+  const { mutate: createReview } = useCreteBankReview();
+
+  const [rate, setRate] = useState(4);
+  const [review, setReview] = useState("");
+
+  if (!bankId) return null;
+
+  return (
+    <>
+      <Chip label="Add review" onClick={handleOpen} />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography variant="h5" sx={{ textAlign: "center" }}>
+            Bank review
+          </Typography>
+          <Rating
+            sx={{ mb: 2 }}
+            value={rate}
+            onChange={(_, rate) => !!rate && setRate(rate)}
+          />
+          <TextField
+            sx={{ mb: 2 }}
+            label="Review"
+            fullWidth
+            multiline
+            rows={3}
+            value={review}
+            onChange={(e) => setReview(e.target.value)}
+          />
+          <Button
+            fullWidth
+            disabled={!review || !rate}
+            onClick={() =>
+              createReview({
+                userId: userId as number,
+                bankId,
+                rate,
+                review,
+              })
+            }
+          >
+            Create
+          </Button>
+        </Box>
+      </Modal>
+    </>
+  );
+};
+
+const CreateBankAccount: React.FC = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedAccount("");
+    setAmount(0);
+  };
+
+  const [selectedAccount, setSelectedAccount] = useState("");
+  const [amount, setAmount] = useState(0);
+
+  const [userId] = useUserId();
+
+  const freeAccounts = useFreeCurrencies();
+
+  const { mutate: createAccount } = useAccountCreate();
+
+  if (!freeAccounts.length) return null;
+
+  return (
+    <>
+      <Chip label="Add account" onClick={handleOpen} />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography variant="h5" sx={{ textAlign: "center", mb: 2 }}>
+            Create account
+          </Typography>
+          <FormControl sx={{ mb: 2 }} fullWidth>
+            <InputLabel id="demo-simple-select-label">Currency</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Currency"
+              value={selectedAccount}
+              onChange={(e) => setSelectedAccount(e.target.value)}
+            >
+              {freeAccounts.map((currency) => (
+                <MenuItem key={currency} value={currency}>
+                  {currency}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <TextField
+            sx={{ mb: 2 }}
+            type="number"
+            fullWidth
+            value={amount}
+            onChange={(e) => setAmount(Math.abs(+e.target.value))}
+          />
+          <Button
+            fullWidth
+            disabled={!amount || !selectedAccount}
+            onClick={() =>
+              createAccount({
+                userId: userId as number,
+                currency: selectedAccount,
+                amount: amount,
+                isDefault: false,
+              })
+            }
+          >
+            Create
+          </Button>
+        </Box>
+      </Modal>
+    </>
+  );
+};
 
 const BankAccount: React.FC = () => {
   const [fromCurrency, setFromCurrency] = useState("");
@@ -60,44 +219,10 @@ const BankAccount: React.FC = () => {
         aria-describedby="modal-modal-description"
       >
         <>
-          {!!exchangeBank && !!bankReviews.length && (
-            <Box sx={styleReviews}>
-              <Typography variant="h5" sx={{ textAlign: "center", mb: 1 }}>
-                Reviews
-              </Typography>
-              <Box sx={{ maxHeight: 300, overflow: "auto", p: 1, pr: 2 }}>
-                {bankReviews.map((review) => (
-                  <Box
-                    key={review.id}
-                    sx={{
-                      mt: 1,
-                      p: 1,
-                      borderRadius: 1,
-                      backgroundColor: "rgba(0,0,0,0.02)",
-                    }}
-                  >
-                    <Rating value={review.rate} readOnly />
-                    <Typography>{review.review}</Typography>
-                    {!!review.createdAt && (
-                      <Typography
-                        sx={{ fontSize: 10, mt: 0.5 }}
-                        color="text.secondary"
-                      >
-                        {new Date(review.createdAt).getDate()}.
-                        {new Date(review.createdAt).getMonth()}.
-                        {new Date(review.createdAt).getFullYear()}
-                      </Typography>
-                    )}
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          )}
           <Box sx={style}>
             <Typography variant="h5" sx={{ textAlign: "center" }}>
               Accounts
             </Typography>
-
             {bankAccount.map((account) => (
               <Typography
                 key={account.id}
@@ -108,6 +233,10 @@ const BankAccount: React.FC = () => {
                 {account.currency}: {account.amount}
               </Typography>
             ))}
+            <Box sx={{ display: "flex", mt: 2, "&>*": { mr: 1 } }}>
+              <CreateBankAccount />
+              <CreateBankReview bankId={exchangeBank} />
+            </Box>
             <Box sx={{ mt: 2 }}>
               <FormControl sx={{ mt: 1, mb: 1 }} fullWidth>
                 <InputLabel id="demo-simple-select-label">Bank</InputLabel>
@@ -213,6 +342,39 @@ const BankAccount: React.FC = () => {
               </Button>
             </Box>
           </Box>
+          {!!exchangeBank && !!bankReviews.length && (
+            <Box sx={styleReviews}>
+              <Typography variant="h5" sx={{ textAlign: "center", mb: 1 }}>
+                Reviews
+              </Typography>
+              <Box sx={{ maxHeight: 300, overflow: "auto", p: 1, pr: 2 }}>
+                {bankReviews.map((review) => (
+                  <Box
+                    key={review.id}
+                    sx={{
+                      mt: 1,
+                      p: 1,
+                      borderRadius: 1,
+                      backgroundColor: "rgba(0,0,0,0.02)",
+                    }}
+                  >
+                    <Rating value={review.rate} readOnly />
+                    <Typography>{review.review}</Typography>
+                    {!!review.createdAt && (
+                      <Typography
+                        sx={{ fontSize: 10, mt: 0.5 }}
+                        color="text.secondary"
+                      >
+                        {new Date(review.createdAt).getDate()}.
+                        {new Date(review.createdAt).getMonth()}.
+                        {new Date(review.createdAt).getFullYear()}
+                      </Typography>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          )}
         </>
       </Modal>
     </>
