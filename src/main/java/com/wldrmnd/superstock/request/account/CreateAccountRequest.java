@@ -3,10 +3,11 @@ package com.wldrmnd.superstock.request.account;
 import com.wldrmnd.superstock.model.bank.Currency;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Getter
-public class CreateAccountRequest {
+public class CreateAccountRequest implements Serializable {
 
     private Long userId;
     private Currency currency;

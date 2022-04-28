@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,7 +53,7 @@ public class BankExchangeController {
     }
 
     @PostMapping("/create")
-    public BankExchange create(CreateBankExchangeRequest request) {
+    public BankExchange create(@RequestBody CreateBankExchangeRequest request) {
         return bankExchangeMapper.toModel(bankExchangeService.create(request));
     }
 }

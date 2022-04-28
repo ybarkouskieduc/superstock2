@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,12 +51,12 @@ public class AccountController {
     }
 
     @PostMapping("/create")
-    public Account create(CreateAccountRequest request) {
+    public Account create(@RequestBody CreateAccountRequest request) {
         return accountMapper.toModel(accountService.create(request));
     }
 
     @PutMapping("/update")
-    public Account update(UpdateAccountRequest request) {
+    public Account update(@RequestBody UpdateAccountRequest request) {
         return accountMapper.toModel(accountService.update(request));
     }
 }
