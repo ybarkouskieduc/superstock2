@@ -168,7 +168,12 @@ export const useBankCreate = () => {
   return useMutation(apiBankCreate);
 };
 
-const apiAccountCreate = () =>
+const apiAccountCreate = (data: {
+  userId: number;
+  currency: string;
+  amount: number;
+  isDefault: boolean;
+}) =>
   http
     .post<{
       id?: number /** Format: int64 */;
@@ -176,7 +181,7 @@ const apiAccountCreate = () =>
       currency?: string;
       amount?: number;
       default?: boolean;
-    }>("account/create")
+    }>("account/create", data)
     .then(({ data }) => data);
 export const useAccountCreate = () => {
   const qc = useQueryClient();
@@ -364,6 +369,19 @@ export const useBankReviewFind = (params: {
       .then(({ data }) => data)
   );
 
+export const useCreteBankReview = () => {
+  const qc = useQueryClient();
+  return useMutation(
+    (data: { bankId: number; userId: number; rate: number; review: string }) =>
+      http.post("bank/review/create", data).then(({ data }) => data),
+    {
+      onSuccess: () => {
+        qc.invalidateQueries();
+      },
+    }
+  );
+};
+
 export const useBankFind = (params: {
   id?: number /** Format: int64 */;
   name?: string;
@@ -529,7 +547,8 @@ export const useUserBuyStockSchedule = () => {
       stockId: number;
       amount: number;
       desiredPriceInUSD?: number;
-    }) => http.post("user/flow/buy/stock/schedule", data).then(({ data }) => data),
+    }) =>
+      http.post("user/flow/buy/stock/schedule", data).then(({ data }) => data),
     {
       onSuccess: () => {
         qc.invalidateQueries();
