@@ -22,8 +22,8 @@ import {
   useUserBuyStock,
   useUserBuyStockSchedule,
   useUserSellStock,
-} from "../queries";
-import { useUserAccount, useUserId } from "../lib";
+} from "../hooks/queries";
+import { useUserAccount, useUserId } from "../hooks/lib";
 import { useState } from "react";
 
 type Stock = {

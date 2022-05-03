@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useAccount, useStockAccountFind } from "../queries";
+import { useAccount, useStockAccountFind } from "../hooks/queries";
 
 type Stock = {
   id?: number;

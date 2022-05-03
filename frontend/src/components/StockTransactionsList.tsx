@@ -4,8 +4,8 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
-import { useStock, useStockPending, useStockTransactionFind } from "../queries";
-import { useUserId } from "../lib";
+import { useStock, useStockPending, useStockTransactionFind } from "../hooks/queries";
+import { useUserId } from "../hooks/lib";
 
 const StockTransactionsList: React.FC<{ filter?: string }> = ({ filter }) => {
   const [userId] = useUserId();

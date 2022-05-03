@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useUserAccount, useUserId } from "../lib";
+import { useUserAccount, useUserId } from "../hooks/lib";
 import {
   useAccountCreate,
   useAccountFind,
@@ -23,12 +23,12 @@ import {
   useBankReviewFind,
   useCreteBankReview,
   useUserExchangeCurrency,
-} from "../queries";
+} from "../hooks/queries";
 
 const useFreeCurrencies = () => {
   const [userId] = useUserId();
 
-  const currencies = useMemo(() => ["USD", "BYN"], []);
+  const currencies = useMemo(() => ["USD", "BYN", "EUR", "RUB"], []);
 
   const { data: accounts = [] } = useAccountFind({
     userId: userId as number,
@@ -41,6 +41,12 @@ const useFreeCurrencies = () => {
 
 const CreateBankReview: React.FC<{ bankId?: number }> = ({ bankId }) => {
   const [open, setOpen] = useState(false);
+  const [userId] = useUserId();
+
+  const { mutate: createReview } = useCreteBankReview();
+
+  const [rate, setRate] = useState(4);
+  const [review, setReview] = useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -48,13 +54,6 @@ const CreateBankReview: React.FC<{ bankId?: number }> = ({ bankId }) => {
     setRate(4);
     setReview("");
   };
-
-  const [userId] = useUserId();
-
-  const { mutate: createReview } = useCreteBankReview();
-
-  const [rate, setRate] = useState(4);
-  const [review, setReview] = useState("");
 
   if (!bankId) return null;
 
@@ -123,6 +122,15 @@ const CreateBankAccount: React.FC = () => {
   const freeAccounts = useFreeCurrencies();
 
   const { mutate: createAccount } = useAccountCreate();
+  const handleCreateAccount = (): void => {
+    createAccount({
+      userId: userId as number,
+      currency: selectedAccount,
+      amount: amount,
+      isDefault: false,
+    })
+    setOpen(false)
+  }
 
   if (!freeAccounts.length) return null;
 
@@ -165,14 +173,7 @@ const CreateBankAccount: React.FC = () => {
           <Button
             fullWidth
             disabled={!amount || !selectedAccount}
-            onClick={() =>
-              createAccount({
-                userId: userId as number,
-                currency: selectedAccount,
-                amount: amount,
-                isDefault: false,
-              })
-            }
+            onClick={handleCreateAccount}
           >
             Create
           </Button>

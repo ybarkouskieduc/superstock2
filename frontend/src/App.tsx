@@ -11,9 +11,9 @@ import {
 import { Box, Button, TextField } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-import { useUserCreate, useUserLogin } from "./queries";
+import { useUserCreate, useUserLogin } from "./hooks/queries";
 import StocksList from "./components/StocksList";
-import { useUserId } from "./lib";
+import { useUserId } from "./hooks/lib";
 import BankAccount from "./components/BankAccount";
 import SearchInput from "./components/SearchInput";
 import StockTransactionsList from "./components/StockTransactionsList";

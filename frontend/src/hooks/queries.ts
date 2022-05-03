@@ -52,6 +52,7 @@ const apiBankReviewUpdate = () =>
       createdAt?: string /** Format: date-time */;
     }>("bank/review/update")
     .then(({ data }) => data);
+
 export const useBankReviewUpdate = () => {
   const qc = useQueryClient();
   return useMutation(apiBankReviewUpdate);
@@ -183,9 +184,14 @@ const apiAccountCreate = (data: {
       default?: boolean;
     }>("account/create", data)
     .then(({ data }) => data);
+
 export const useAccountCreate = () => {
   const qc = useQueryClient();
-  return useMutation(apiAccountCreate);
+  return useMutation(apiAccountCreate, {
+      onSuccess: () => {
+          qc.invalidateQueries()
+      }
+  });
 };
 
 const apiUser = () => () =>
