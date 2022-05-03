@@ -6,6 +6,7 @@ com/wldrmnd/superstock/mapper/stock/StockPriceMapper.class
 com/wldrmnd/superstock/request/bank/FindBankRequest$FindBankRequestBuilder.class
 com/wldrmnd/superstock/exception/StockPriceIsNotExistsException.class
 com/wldrmnd/superstock/mapper/bank/AccountMapper.class
+com/wldrmnd/superstock/controller/RestResponseEntityExceptionHandler.class
 com/wldrmnd/superstock/mapper/stock/StockStatisticMapperImpl.class
 com/wldrmnd/superstock/domain/enums/StockTransactionGoal.class
 com/wldrmnd/superstock/controller/UserController.class
@@ -162,6 +163,7 @@ com/wldrmnd/superstock/domain/tables/FlywaySchemaHistory.class
 com/wldrmnd/superstock/controller/bank/BankExchangeController.class
 com/wldrmnd/superstock/service/stock/StockPriceService.class
 com/wldrmnd/superstock/exception/UserAccountNotFoundException.class
+com/wldrmnd/superstock/job/RefreshStockPriceJob.class
 com/wldrmnd/superstock/request/stock/account/UpdateStockAccountRequest$UpdateStockAccountRequestBuilder.class
 com/wldrmnd/superstock/request/bank/review/UpdateBankReviewRequest.class
 com/wldrmnd/superstock/request/bank/exchange/CreateBankExchangeTransactionRequest$CreateBankExchangeTransactionRequestBuilder.class

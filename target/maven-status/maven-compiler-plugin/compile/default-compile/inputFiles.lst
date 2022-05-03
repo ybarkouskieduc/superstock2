@@ -50,9 +50,11 @@
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/request/stock/transaction/CreateStockTransactionRequest.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/jooq/stock/ExchangeStockRequestJooqRepository.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/request/user/LoginUserRequest.java
+/Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/job/RefreshStockPriceJob.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/model/bank/Bank.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/mapper/bank/AccountMapper.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/controller/bank/AccountController.java
+/Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/controller/RestResponseEntityExceptionHandler.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/model/bank/BankExchange.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/model/stock/Stock.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/jooq/bank/AccountJooqRepository.java

@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StockPriceService {
 
+
     private final StockPriceJooqRepository stockPriceJooqRepository;
 
     public StockPriceRecord create(CreateStockPriceRequest request) {
@@ -22,4 +23,6 @@ public class StockPriceService {
     public List<StockPriceRecord> find(FindStockPriceRequest request) {
         return stockPriceJooqRepository.find(request);
     }
+
+
 }

@@ -26,7 +26,7 @@ INSERT INTO `bank_review` (`id`, `bank_id`, `user_id`, `rate`, `review`, `create
     (1, 19, 67, 5, 'Крутой банк!', '2022-04-24 14:43:11');
 
 INSERT INTO `stock` (`id`, `name`, `sign`, `description`) VALUES
-    (1, 'Apple', 'APPL', 'Apple stock description'),
+    (1, 'Apple', 'AAPL', 'Apple stock description'),
     (2, 'Amazon', 'AMZN', NULL),
     (3, 'Alphabet', 'GOOG', NULL);
 
@@ -43,3 +43,7 @@ INSERT INTO `stock_price` (`id`, `stock_id`, `price`, `created_at`) VALUES
 INSERT INTO `stock_statistic` (`id`, `stock_id`, `dividend`, `volume`, `market_value`) VALUES
     (1, 1, 3.00, 21313123, 123123123.00);
 
+INSERT INTO `stock` (`id`, `name`, `sign`, `description`) VALUES
+    (4, 'Tesla', 'TSLA', NULL),
+    (5, 'Meta', 'FB', NULL),
+    (6, 'Netflix', 'NFLX', NULL);

@@ -1,24 +1,37 @@
 package com.wldrmnd.superstock.job;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.wldrmnd.superstock.domain.tables.records.ExchangeStockRequestRecord;
 import com.wldrmnd.superstock.domain.tables.records.StockPriceRecord;
+import com.wldrmnd.superstock.domain.tables.records.StockRecord;
 import com.wldrmnd.superstock.jooq.stock.ExchangeStockRequestJooqRepository;
 import com.wldrmnd.superstock.request.stock.ExchangeStockRequest;
+import com.wldrmnd.superstock.request.stock.FindStockRequest;
+import com.wldrmnd.superstock.request.stock.price.CreateStockPriceRequest;
 import com.wldrmnd.superstock.request.stock.price.FindStockPriceRequest;
 import com.wldrmnd.superstock.service.UserFlowService;
 import com.wldrmnd.superstock.service.stock.StockPriceService;
+import com.wldrmnd.superstock.service.stock.StockService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @EnableAsync
 @Component
 @RequiredArgsConstructor
 public class StockExchangeExecutionJob {
+
 
     private final StockPriceService stockPriceService;
     private final UserFlowService userFlowService;

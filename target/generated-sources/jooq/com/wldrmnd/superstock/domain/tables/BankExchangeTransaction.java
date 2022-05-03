@@ -4,20 +4,16 @@
 package com.wldrmnd.superstock.domain.tables;
 
 
-import com.wldrmnd.superstock.domain.Indexes;
 import com.wldrmnd.superstock.domain.Keys;
 import com.wldrmnd.superstock.domain.Superstock;
 import com.wldrmnd.superstock.domain.tables.records.BankExchangeTransactionRecord;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.List;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
-import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Row11;
@@ -151,11 +147,6 @@ public class BankExchangeTransaction extends TableImpl<BankExchangeTransactionRe
     }
 
     @Override
-    public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.BANK_EXCHANGE_TRANSACTION_BANK_ID, Indexes.BANK_EXCHANGE_TRANSACTION_USER_ID);
-    }
-
-    @Override
     public Identity<BankExchangeTransactionRecord, Long> getIdentity() {
         return (Identity<BankExchangeTransactionRecord, Long>) super.getIdentity();
     }
@@ -163,34 +154,6 @@ public class BankExchangeTransaction extends TableImpl<BankExchangeTransactionRe
     @Override
     public UniqueKey<BankExchangeTransactionRecord> getPrimaryKey() {
         return Keys.KEY_BANK_EXCHANGE_TRANSACTION_PRIMARY;
-    }
-
-    @Override
-    public List<ForeignKey<BankExchangeTransactionRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.BANK_EXCHANGE_TRANSACTION_IBFK_1, Keys.BANK_EXCHANGE_TRANSACTION_IBFK_2);
-    }
-
-    private transient User _user;
-    private transient Bank _bank;
-
-    /**
-     * Get the implicit join path to the <code>superstock.user</code> table.
-     */
-    public User user() {
-        if (_user == null)
-            _user = new User(this, Keys.BANK_EXCHANGE_TRANSACTION_IBFK_1);
-
-        return _user;
-    }
-
-    /**
-     * Get the implicit join path to the <code>superstock.bank</code> table.
-     */
-    public Bank bank() {
-        if (_bank == null)
-            _bank = new Bank(this, Keys.BANK_EXCHANGE_TRANSACTION_IBFK_2);
-
-        return _bank;
     }
 
     @Override

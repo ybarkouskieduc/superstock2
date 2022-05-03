@@ -12,3 +12,5 @@ spring:
         password: konsus
         baselineOnMigrate: true
         driver-class-name: com.mysql.jdbc.Driver
+
+nasdaq.api.key: "eafcc7e731d07347d1c95bfbf55516e2"
