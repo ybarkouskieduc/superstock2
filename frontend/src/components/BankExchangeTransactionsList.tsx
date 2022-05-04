@@ -18,12 +18,12 @@ const BankExchangeTransactionsList: React.FC<{ filter?: string }> = ({
   });
 
   return (
-    <Box sx={{ overflow: "auto", flex: 1 }}>
+    <Box sx={{ overflow: "auto", display: "grid", gridTemplateColumns: "1fr 1fr 1fr" }}>
       {transactions
         .slice()
         .reverse()
         .map((transaction) => (
-          <Card sx={{ m: 1, ml: "auto", mr: "auto", maxWidth: 400 }}>
+          <Card sx={{ m: 2, ml: "auto", mr: "auto", width: "90%", maxWidth: 500 }}>
             <CardContent>
               <Typography variant="h5">
                 Банк: {banks.find(({ id }) => id === transaction.bankId)?.name}

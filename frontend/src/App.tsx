@@ -1,5 +1,4 @@
 import { useState } from "react";
-import useLocalStorageState from "use-local-storage-state";
 import {
   Link,
   Outlet,
@@ -40,7 +39,6 @@ const colors = {
   focused: "#265299",
 };
 
-// TODO: add validation
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -75,6 +73,7 @@ const LoginPage: React.FC = () => {
         />
         <Button
           sx={{ m: 1 }}
+          disabled={!password || !username}
           onClick={() =>
             mutate(
               { username, password },
@@ -87,10 +86,10 @@ const LoginPage: React.FC = () => {
             )
           }
         >
-          Логин
+          ЛОГИН
         </Button>
         <Link to="/register" style={{ textAlign: "center" }}>
-          Регистрация
+          РЕГИСТРАЦИЯ
         </Link>
       </Box>
     </Box>
@@ -111,7 +110,9 @@ const RegisterPage: React.FC = () => {
   const emailValidation = () => {
       const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
       if(!email || !regex.test(email)) {
-          setError("Невалидный адрес электронной почты")
+          setError("Невалидный адрес электронной почты");
+      } else if (error) {
+          setError("");
       }
   }
 
@@ -136,6 +137,7 @@ const RegisterPage: React.FC = () => {
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
+        flexDirection: "column"
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -163,27 +165,17 @@ const RegisterPage: React.FC = () => {
         <Button
           sx={{ m: 1 }}
           disabled={!!error || !password || !username || !email}
-          onClick={() => {
-              mutate(
-                  { username, password },
-                  {
-                      onSuccess: (data) => {
-                          setUserId(data.id as number);
-                          navigate("/");
-                      },
-                  }
-              )
-          }}
+          onClick={handleSubmit}
         >
-          Регистрация
+          РЕГИСТРАЦИЯ
         </Button>
         <Link to="/" style={{ textAlign: "center" }}>
-          Логин
+          ЛОГИН
         </Link>
-          <Typography sx={{ mt: "20px", color: "#ef0808", textAlign: "center" }}>
-              {error}
-          </Typography>
       </Box>
+        <Typography sx={{ mt: "20px", color: "#ef0808", textAlign: "center", width: "auto" }}>
+            {error}
+        </Typography>
     </Box>
   );
 };

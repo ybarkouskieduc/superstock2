@@ -110,7 +110,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
               <TabPanel value="1">
                 <Box sx={{ maxHeight: 300, overflow: "auto", p: 1, pr: 2 }}>
                   <table style={{ textAlign: "center", width: "100%" }}>
-                    <thead style={{ fontWeight: "bold", fontSize: "18px", fontFamily: "Roboto" }}>
+                    <thead style={{ fontWeight: "bold", fontSize: "18px" }}>
                     <tr>
                       <td>Дата</td>
                       <td>Цена</td>
@@ -140,19 +140,19 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                         <>
                           <Box sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}>
                             <Typography sx={{ textAlign: "center" }}>За полчаса</Typography>
-                            <Typography>{halfOfHourProfit}</Typography>
+                            <Typography>${halfOfHourProfit}</Typography>
                           </Box>
                           <Box sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}>
                             <Typography sx={{ textAlign: "center" }}>За час</Typography>
-                            <Typography>{hourProfit}</Typography>
+                            <Typography>${hourProfit}</Typography>
                           </Box>
                           <Box sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}>
                             <Typography sx={{ textAlign: "center" }}>За день</Typography>
-                            <Typography>{dayProfit}</Typography>
+                            <Typography>${dayProfit}</Typography>
                           </Box>
                           <Box sx={{ display: "flex", justifyContent: "space-between",  }}>
                             <Typography sx={{ textAlign: "center" }}>За неделю</Typography>
-                            <Typography>{weekProfit}</Typography>
+                            <Typography>${weekProfit}</Typography>
                           </Box>
                         </>
                     ) : (
