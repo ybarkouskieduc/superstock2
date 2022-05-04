@@ -35,7 +35,7 @@ public class RefreshStockPriceJob {
 
     @SneakyThrows
     @Async
-    @Scheduled(fixedRate = 100000)
+    @Scheduled(fixedRate = 120000)
     public void refreshStockPrice() {
         for (String stock : ACTUAL_STOCKS) {
             String stockPriceUrl = STOCK_URL + stock + "?apikey=" + apiKey;
