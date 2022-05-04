@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import {AxiosError } from "axios";
 import {
   Box,
   Button,
@@ -115,7 +116,8 @@ const CreateBankAccount: React.FC = () => {
   };
 
   const [selectedAccount, setSelectedAccount] = useState("");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState<number | string>(0);
+  const [error, setError] = useState('');
 
   const [userId] = useUserId();
 
@@ -123,13 +125,26 @@ const CreateBankAccount: React.FC = () => {
 
   const { mutate: createAccount } = useAccountCreate();
   const handleCreateAccount = (): void => {
-    createAccount({
-      userId: userId as number,
-      currency: selectedAccount,
-      amount: amount,
-      isDefault: false,
-    })
-    setOpen(false)
+    createAccount(
+        {
+          userId: userId as number,
+          currency: selectedAccount,
+          amount: +amount,
+          isDefault: false,
+        },
+        {
+          onSuccess: () => {
+            setOpen(false)
+          },
+          onError: (error) => {
+            if (typeof (error as AxiosError).response?.data !== "string") {
+              setError('Проблемы на сервере')
+            } else {
+              setError((error as AxiosError).response?.data)
+            }
+          }
+        }
+    )
   }
 
   if (!freeAccounts.length) return null;
@@ -165,10 +180,11 @@ const CreateBankAccount: React.FC = () => {
           </FormControl>
           <TextField
             sx={{ mb: 2 }}
+            label="Amount"
             type="number"
             fullWidth
             value={amount}
-            onChange={(e) => setAmount(Math.abs(+e.target.value))}
+            onChange={(e) => setAmount(e.target.value ? Math.abs(+e.target.value) : '')}
           />
           <Button
             fullWidth
@@ -177,6 +193,7 @@ const CreateBankAccount: React.FC = () => {
           >
             Create
           </Button>
+          <Typography sx={{ textAlign: "center", color: "#e50707" }}>{error && error}</Typography>
         </Box>
       </Modal>
     </>
@@ -189,6 +206,7 @@ const BankAccount: React.FC = () => {
   const [exchangeAmount, setExchangeAmount] = useState(0);
   const [exchangeBank, setExchangeBank] = useState(0);
 
+  const [error, setError] = useState('');
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -201,7 +219,7 @@ const BankAccount: React.FC = () => {
 
   const [{ data: bankAccount = [] }, usdAmount] = useUserAccount();
   const [userId] = useUserId();
-  const { mutate: exchange, error } = useUserExchangeCurrency();
+  const { mutate: exchange } = useUserExchangeCurrency();
 
   const handleExchange = (): void => {
     exchange({
@@ -210,8 +228,15 @@ const BankAccount: React.FC = () => {
       currencyIn: fromCurrency,
       currencyOut: toCurrency,
       amount: exchangeAmount,
+    }, {
+      onError: (error) => {
+        if (typeof (error as AxiosError).response?.data !== "string") {
+          setError('Проблемы на сервере')
+        } else {
+          setError((error as AxiosError).response?.data)
+        }
+      }
     });
-    console.log('[INFO]error(incomponent)', error)
   }
 
   const { data: banks = [] } = useBank();
@@ -344,6 +369,7 @@ const BankAccount: React.FC = () => {
               >
                 Exchange
               </Button>
+              <Typography sx={{ textAlign: "center", color: "#e50707" }}>{error && error}</Typography>
             </Box>
           </Box>
           {!!exchangeBank && !!bankReviews.length && (
