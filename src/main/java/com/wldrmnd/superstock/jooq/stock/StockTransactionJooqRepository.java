@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static com.wldrmnd.superstock.domain.Tables.STOCK_TRANSACTION;
@@ -87,6 +88,16 @@ public class StockTransactionJooqRepository {
         }
         if (request.getGoal() != null) {
             condition = condition.and(STOCK_TRANSACTION.GOAL.eq(request.getGoal()));
+        }
+        if (request.getDateFrom() != null) {
+            condition = condition.and(STOCK_TRANSACTION.CREATED_AT.greaterOrEqual(
+                    Timestamp.valueOf(request.getDateFrom()))
+            );
+        }
+        if (request.getDateTo() != null) {
+            condition = condition.and(STOCK_TRANSACTION.CREATED_AT.lessOrEqual(
+                    Timestamp.valueOf(request.getDateTo()))
+            );
         }
 
         if (condition == noCondition()) {

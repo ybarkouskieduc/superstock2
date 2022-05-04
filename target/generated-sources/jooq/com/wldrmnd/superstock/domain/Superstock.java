@@ -13,6 +13,7 @@ import com.wldrmnd.superstock.domain.tables.ExchangeStockRequest;
 import com.wldrmnd.superstock.domain.tables.FlywaySchemaHistory;
 import com.wldrmnd.superstock.domain.tables.Stock;
 import com.wldrmnd.superstock.domain.tables.StockAccount;
+import com.wldrmnd.superstock.domain.tables.StockAccountStatistic;
 import com.wldrmnd.superstock.domain.tables.StockPrice;
 import com.wldrmnd.superstock.domain.tables.StockStatistic;
 import com.wldrmnd.superstock.domain.tables.StockTransaction;
@@ -85,6 +86,11 @@ public class Superstock extends SchemaImpl {
     public final StockAccount STOCK_ACCOUNT = StockAccount.STOCK_ACCOUNT;
 
     /**
+     * The table <code>superstock.stock_account_statistic</code>.
+     */
+    public final StockAccountStatistic STOCK_ACCOUNT_STATISTIC = StockAccountStatistic.STOCK_ACCOUNT_STATISTIC;
+
+    /**
      * The table <code>superstock.stock_price</code>.
      */
     public final StockPrice STOCK_PRICE = StockPrice.STOCK_PRICE;
@@ -129,6 +135,7 @@ public class Superstock extends SchemaImpl {
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Stock.STOCK,
             StockAccount.STOCK_ACCOUNT,
+            StockAccountStatistic.STOCK_ACCOUNT_STATISTIC,
             StockPrice.STOCK_PRICE,
             StockStatistic.STOCK_STATISTIC,
             StockTransaction.STOCK_TRANSACTION,

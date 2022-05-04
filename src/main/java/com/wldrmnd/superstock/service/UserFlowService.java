@@ -294,8 +294,16 @@ public class UserFlowService {
                 .goal(StockTransactionGoal.BUY)
                 .stockId(request.getStockId())
                 .userId(request.getUserId())
+                .dateFrom(request.getDateFrom())
+                .dateTo(request.getDateTo())
                 .build()
-        ).stream().map(StockTransactionRecord::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        ).stream().map(it -> it.getAmount().multiply(
+                stockPriceService.find(FindStockPriceRequest.builder()
+                        .id(it.getStockPriceId())
+                        .build()
+                ).stream().findFirst().get().getPrice())
+        ).reduce(BigDecimal.ZERO, BigDecimal::add);
+
         log.info("User [{}] total buy amount: {} {}", request.getUserId(), totalBuyAmount, stockName);
 
         // get all sell transactions
@@ -303,8 +311,16 @@ public class UserFlowService {
                 .goal(StockTransactionGoal.SELL)
                 .stockId(request.getStockId())
                 .userId(request.getUserId())
+                .dateFrom(request.getDateFrom())
+                .dateTo(request.getDateTo())
                 .build()
-        ).stream().map(StockTransactionRecord::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        ).stream().map(it -> it.getAmount().multiply(
+                stockPriceService.find(FindStockPriceRequest.builder()
+                        .id(it.getStockPriceId())
+                        .build()
+                ).stream().findFirst().get().getPrice())
+        ).reduce(BigDecimal.ZERO, BigDecimal::add);
+
         log.info("User [{}] total sell amount: {} {}", request.getUserId(), totalSellAmount, stockName);
 
         // get difference between buy and sell
