@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
 @Component
@@ -48,7 +49,7 @@ public class RefreshStockPriceJob {
             ).stream().findFirst().get();
 
             stockPriceService.create(CreateStockPriceRequest.builder()
-                    .price(new BigDecimal(stockPrice).setScale(2))
+                    .price(new BigDecimal(stockPrice).setScale(2).round(MathContext.DECIMAL32))
                     .stockId(stockRecord.getId())
                     .build());
         }

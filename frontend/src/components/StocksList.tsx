@@ -72,7 +72,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
   return (
     <>
       <Button size="small" onClick={handleOpen}>
-        info
+        информация
       </Button>
       <Modal
         open={open}
@@ -87,7 +87,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
           <Box sx={{ display: "flex" }}>
             <Box sx={{ m: 1 }}>
               <Typography sx={{ textAlign: "center" }}>
-                Prices history
+                История цен
               </Typography>
               <Box sx={{ maxHeight: 300, overflow: "auto", p: 1, pr: 2 }}>
                 {prices.map(({ id, price, createdAt }) => (
@@ -95,11 +95,11 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                     <Typography>{formatDate(new Date(createdAt))}</Typography>
                     <Typography sx={{ ml: 2 }}>${price}</Typography>
                   </Box>
-                ))}
+                )).reverse()}
               </Box>
             </Box>
             <Box sx={{ m: 1 }}>
-              <Typography sx={{ textAlign: "center" }}>About</Typography>
+              <Typography sx={{ textAlign: "center" }}>Подробнее</Typography>
               <Typography>{stock.description}</Typography>
             </Box>
           </Box>
@@ -110,15 +110,15 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                 sx={{ width: "fit-content", m: "auto" }}
                 centered
               >
-                <Tab label="Buy" value="1" />
-                <Tab label="Buy Schedule" value="2" />
-                <Tab label="Sell" value="3" />
+                <Tab label="Покупка" value="1" />
+                <Tab label="Запланировать" value="2" />
+                <Tab label="Продажа" value="3" />
               </TabList>
               <TabPanel value="1">
                 <TextField
                   sx={{ mb: 2 }}
                   type="number"
-                  label="Amount"
+                  label="Количество"
                   fullWidth
                   value={buyAmount}
                   onChange={(e) =>
@@ -144,14 +144,14 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                     )
                   }
                 >
-                  Buy
+                  Купить
                 </Button>
               </TabPanel>
               <TabPanel value="2">
                 <TextField
                   sx={{ mb: 2 }}
                   type="number"
-                  label="Amount"
+                  label="Количество"
                   fullWidth
                   value={buyWhenAmount}
                   onChange={(e) =>
@@ -163,7 +163,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                 <TextField
                   sx={{ mb: 2 }}
                   type="number"
-                  label="Price"
+                  label="Цена"
                   fullWidth
                   value={buyWhenPrice}
                   onChange={(e) => setBuyWhenPrice(Math.abs(+e.target.value))}
@@ -187,14 +187,14 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                     )
                   }
                 >
-                  Buy Schedule
+                  Запланированная покупка
                 </Button>
               </TabPanel>
               <TabPanel value="3">
                 <TextField
                   sx={{ mb: 2 }}
                   type="number"
-                  label="Amount"
+                  label="Количество"
                   fullWidth
                   value={sellAmount}
                   onChange={(e) =>
@@ -219,7 +219,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                     )
                   }
                 >
-                  Sell
+                  Продать
                 </Button>
               </TabPanel>
             </TabContext>
@@ -274,7 +274,7 @@ const StocksList: React.FC<{ filter?: string }> = ({ filter = "" }) => {
         }}
       >
         <Typography variant="h5" component="div">
-          No stocks
+          Акций нет
         </Typography>
       </Box>
     );

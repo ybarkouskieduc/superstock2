@@ -13,6 +13,7 @@
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/service/user/UserService.java
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/BankExchange.java
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/records/BankExchangeTransactionRecord.java
+/Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/model/stock/StockProfit.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/request/user/CreateUserRequest.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/exception/NotEnoughStockToSellException.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/request/stock/account/FindStockAccountRequest.java
@@ -111,6 +112,7 @@
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/records/StockPriceRecord.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/request/stock/account/CreateStockAccountRequest.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/mapper/bank/BankExchangeTransactionMapper.java
+/Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/request/stock/CalculateStockProfitRequest.java
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/StockStatistic.java
 /Users/yahorbarkouski/superstock2/target/generated-sources/jooq/com/wldrmnd/superstock/domain/tables/StockPrice.java
 /Users/yahorbarkouski/superstock2/src/main/java/com/wldrmnd/superstock/mapper/stock/StockPriceMapper.java
