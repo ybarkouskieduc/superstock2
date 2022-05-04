@@ -5,6 +5,7 @@ import com.wldrmnd.superstock.domain.tables.records.AccountRecord;
 import com.wldrmnd.superstock.domain.tables.records.BankExchangeRecord;
 import com.wldrmnd.superstock.domain.tables.records.StockAccountRecord;
 import com.wldrmnd.superstock.domain.tables.records.StockPriceRecord;
+import com.wldrmnd.superstock.domain.tables.records.StockTransactionRecord;
 import com.wldrmnd.superstock.exception.BankExchangeNotFoundException;
 import com.wldrmnd.superstock.exception.NotEnoughMoneyOnAccountExistsException;
 import com.wldrmnd.superstock.exception.NotEnoughStockToSellException;
@@ -12,22 +13,27 @@ import com.wldrmnd.superstock.exception.StockPriceIsNotExistsException;
 import com.wldrmnd.superstock.exception.UserAccountNotFoundException;
 import com.wldrmnd.superstock.jooq.stock.ExchangeStockRequestJooqRepository;
 import com.wldrmnd.superstock.model.bank.Currency;
+import com.wldrmnd.superstock.model.stock.StockProfit;
 import com.wldrmnd.superstock.request.account.FindAccountRequest;
 import com.wldrmnd.superstock.request.account.UpdateAccountRequest;
 import com.wldrmnd.superstock.request.bank.exchange.CreateBankExchangeTransactionRequest;
 import com.wldrmnd.superstock.request.bank.exchange.FindBankExchangeRequest;
+import com.wldrmnd.superstock.request.stock.CalculateStockProfitRequest;
 import com.wldrmnd.superstock.request.stock.ExchangeStockRequest;
+import com.wldrmnd.superstock.request.stock.FindStockRequest;
 import com.wldrmnd.superstock.request.stock.account.CreateStockAccountRequest;
 import com.wldrmnd.superstock.request.stock.account.FindStockAccountRequest;
 import com.wldrmnd.superstock.request.stock.account.UpdateStockAccountRequest;
 import com.wldrmnd.superstock.request.stock.price.FindStockPriceRequest;
 import com.wldrmnd.superstock.request.stock.transaction.CreateStockTransactionRequest;
+import com.wldrmnd.superstock.request.stock.transaction.FindStockTransactionRequest;
 import com.wldrmnd.superstock.request.user.flow.ExchangeCurrencyRequest;
 import com.wldrmnd.superstock.service.bank.AccountService;
 import com.wldrmnd.superstock.service.bank.BankExchangeService;
 import com.wldrmnd.superstock.service.bank.BankExchangeTransactionService;
 import com.wldrmnd.superstock.service.stock.StockAccountService;
 import com.wldrmnd.superstock.service.stock.StockPriceService;
+import com.wldrmnd.superstock.service.stock.StockService;
 import com.wldrmnd.superstock.service.stock.StockTransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +48,7 @@ import java.util.Optional;
 public class UserFlowService {
 
     private final AccountService accountService;
+    private final StockService stockService;
     private final BankExchangeService bankExchangeService;
     private final BankExchangeTransactionService bankExchangeTransactionService;
     private final StockAccountService stockAccountService;
@@ -155,6 +162,15 @@ public class UserFlowService {
     }
 
     public StockAccountRecord buyStocks(ExchangeStockRequest request) {
+        if (request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new NotEnoughMoneyOnAccountExistsException(
+                    request.getUserId(),
+                    Currency.USD.name(),
+                    BigDecimal.ZERO,
+                    BigDecimal.ZERO
+            );
+        }
+
         StockAccountRecord stockAccount = findStockAccount(request, true);
 
         StockPriceRecord latestStockPrice = getLatestStockPrice(request);
@@ -208,6 +224,13 @@ public class UserFlowService {
     }
 
     public AccountRecord sellStock(ExchangeStockRequest request) {
+        if (request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new NotEnoughStockToSellException(
+                    request.getUserId(), request.getStockId(),
+                    request.getAmount(), BigDecimal.ZERO
+            );
+        }
+
         // check for available stock account
         StockAccountRecord stockAccount = findStockAccount(request, false);
 
@@ -260,6 +283,37 @@ public class UserFlowService {
         return updatedUsdAccount;
     }
 
+    public StockProfit calculateStockProfit(CalculateStockProfitRequest request) {
+        String stockName = stockService.find(
+                FindStockRequest.builder()
+                        .id(request.getStockId()).build()
+        ).stream().findFirst().get().getName();
+
+        // get all buy transactions
+        BigDecimal totalBuyAmount = stockTransactionService.find(FindStockTransactionRequest.builder()
+                .goal(StockTransactionGoal.BUY)
+                .stockId(request.getStockId())
+                .userId(request.getUserId())
+                .build()
+        ).stream().map(StockTransactionRecord::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        log.info("User [{}] total buy amount: {} {}", request.getUserId(), totalBuyAmount, stockName);
+
+        // get all sell transactions
+        BigDecimal totalSellAmount = stockTransactionService.find(FindStockTransactionRequest.builder()
+                .goal(StockTransactionGoal.SELL)
+                .stockId(request.getStockId())
+                .userId(request.getUserId())
+                .build()
+        ).stream().map(StockTransactionRecord::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        log.info("User [{}] total sell amount: {} {}", request.getUserId(), totalSellAmount, stockName);
+
+        // get difference between buy and sell
+        return StockProfit.builder()
+                .profit(totalSellAmount.subtract(totalBuyAmount))
+                .stockName(stockName)
+                .stockId(request.getStockId())
+                .build();
+    }
     private StockPriceRecord getLatestStockPrice(ExchangeStockRequest request) {
         return stockPriceService.find(
                 FindStockPriceRequest.builder()

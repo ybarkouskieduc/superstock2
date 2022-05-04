@@ -26,21 +26,21 @@ const BankExchangeTransactionsList: React.FC<{ filter?: string }> = ({
           <Card sx={{ m: 1, ml: "auto", mr: "auto", maxWidth: 400 }}>
             <CardContent>
               <Typography variant="h5">
-                Bank: {banks.find(({ id }) => id === transaction.bankId)?.name}
+                Банк: {banks.find(({ id }) => id === transaction.bankId)?.name}
               </Typography>
               <Typography
                 sx={{ fontSize: 14 }}
                 color="text.secondary"
                 gutterBottom
               >
-                From {transaction.currencyIn} {transaction.amountIn}
+                Из {transaction.currencyIn} {transaction.amountIn}
               </Typography>
               <Typography
                 sx={{ fontSize: 14 }}
                 color="text.secondary"
                 gutterBottom
               >
-                To {transaction.currencyOut} {transaction.amountOut}
+                в {transaction.currencyOut} {transaction.amountOut}
               </Typography>
             </CardContent>
           </Card>

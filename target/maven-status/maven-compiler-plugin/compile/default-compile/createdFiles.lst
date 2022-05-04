@@ -1,6 +1,8 @@
 com/wldrmnd/superstock/service/stock/StockTransactionService.class
+com/wldrmnd/superstock/model/stock/StockProfit.class
 com/wldrmnd/superstock/request/account/CreateAccountRequest$CreateAccountRequestBuilder.class
 com/wldrmnd/superstock/domain/Indexes.class
+com/wldrmnd/superstock/request/stock/CalculateStockProfitRequest$CalculateStockProfitRequestBuilder.class
 com/wldrmnd/superstock/domain/tables/StockTransaction.class
 com/wldrmnd/superstock/mapper/stock/StockPriceMapper.class
 com/wldrmnd/superstock/request/bank/FindBankRequest$FindBankRequestBuilder.class
@@ -97,6 +99,7 @@ com/wldrmnd/superstock/controller/stock/ExchangeStockRequestController.class
 com/wldrmnd/superstock/request/bank/exchange/FindBankExchangeTransactionRequest.class
 com/wldrmnd/superstock/jooq/stock/ExchangeStockRequestJooqRepository.class
 com/wldrmnd/superstock/mapper/stock/StockMapperImpl.class
+com/wldrmnd/superstock/model/stock/StockProfit$StockProfitBuilder.class
 com/wldrmnd/superstock/model/bank/Account.class
 com/wldrmnd/superstock/exception/BankExchangeNotFoundException.class
 com/wldrmnd/superstock/request/bank/exchange/FindBankExchangeRequest$FindBankExchangeRequestBuilder.class
@@ -124,6 +127,7 @@ com/wldrmnd/superstock/domain/tables/records/BankExchangeRecord.class
 com/wldrmnd/superstock/jooq/stock/StockJooqRepository.class
 com/wldrmnd/superstock/request/user/flow/ExchangeCurrencyRequest.class
 com/wldrmnd/superstock/domain/Superstock.class
+com/wldrmnd/superstock/request/stock/CalculateStockProfitRequest.class
 com/wldrmnd/superstock/request/stock/account/FindStockAccountRequest.class
 com/wldrmnd/superstock/jooq/bank/BankExchangeJooqRepository.class
 com/wldrmnd/superstock/mapper/bank/AccountMapperImpl.class

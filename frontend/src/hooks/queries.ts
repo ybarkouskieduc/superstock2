@@ -251,6 +251,7 @@ export const useStockTransactionFind = (params: {
   userId?: number /** Format: int64 */;
   stockId?: number /** Format: int64 */;
   stockPriceId?: number /** Format: int64 */;
+  stockPrice?: number /** Format: int64 */;
   goal?: "SELL" | "BUY" /** @enum {string} */;
 }) =>
   useQuery(QUERY_KEYS.stockTransactionFind, () =>
@@ -261,6 +262,7 @@ export const useStockTransactionFind = (params: {
           stockId?: number /** Format: int64 */;
           userId?: number /** Format: int64 */;
           stockPriceId?: number /** Format: int64 */;
+          stockPrice?: number /** Format: int64 */;
           amount?: number;
           createdAt?: string /** Format: date-time */;
           revertedAt?: string /** Format: date-time */;

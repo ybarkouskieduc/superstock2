@@ -62,13 +62,13 @@ const LoginPage: React.FC = () => {
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <TextField
           sx={{ m: 1 }}
-          label="Login"
+          label="Логин"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <TextField
           sx={{ m: 1 }}
-          label="Password"
+          label="Пароль"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -87,10 +87,10 @@ const LoginPage: React.FC = () => {
             )
           }
         >
-          Login
+          Логин
         </Button>
         <Link to="/register" style={{ textAlign: "center" }}>
-          register
+          Регистрация
         </Link>
       </Box>
     </Box>
@@ -117,14 +117,14 @@ const RegisterPage: React.FC = () => {
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <TextField
           sx={{ m: 1 }}
-          label="Login"
+          label="Логин"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <TextField sx={{ m: 1 }} label="Email" type="email" />
         <TextField
           sx={{ m: 1 }}
-          label="Password"
+          label="Пароль"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

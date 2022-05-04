@@ -29,8 +29,8 @@ const StockTransactionsList: React.FC<{ filter?: string }> = ({ filter }) => {
           sx={{ width: "fit-content", m: "auto" }}
           centered
         >
-          <Tab label="Done" value="1" />
-          <Tab label="Scheduled" value="2" />
+          <Tab label="Проведены" value="1" />
+          <Tab label="Запланированы" value="2" />
         </TabList>
         <TabPanel value="1">
           {transactions
@@ -48,8 +48,8 @@ const StockTransactionsList: React.FC<{ filter?: string }> = ({ filter }) => {
                     color="text.secondary"
                     gutterBottom
                   >
-                    ${transaction.stockPriceId} pcs.{transaction.amount} ($
-                    {(transaction.stockPriceId || 1) *
+                    ${transaction.stockPrice} pcs.{transaction.amount} ($
+                    {(transaction.stockPrice || 1) *
                       (transaction.amount || 1)}
                     )
                   </Typography>

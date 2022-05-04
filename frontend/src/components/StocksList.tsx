@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { AxiosError } from "axios";
 import {
   Box,
   Button,
@@ -26,6 +25,7 @@ import {
   useUserSellStock,
 } from "../hooks/queries";
 import { useUserId } from "../hooks/lib";
+import {AxiosError} from "axios";
 
 
 type Stock = {
@@ -75,7 +75,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
   return (
     <>
       <Button size="small" onClick={handleOpen}>
-        info
+        информация
       </Button>
       <Modal
         open={open}
@@ -102,19 +102,19 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
               <TabPanel value="1">
                 <Box sx={{ maxHeight: 300, overflow: "auto", p: 1, pr: 2 }}>
                   <table style={{ textAlign: "center", width: "100%" }}>
-                    <thead style={{ fontWeight: "bold", fontSize: "18px" }}>
-                      <tr>
-                        <td>Date</td>
-                        <td>Price</td>
-                      </tr>
+                    <thead style={{ fontWeight: "bold", fontSize: "18px", fontFamily: "Roboto" }}>
+                    <tr>
+                      <td>Date</td>
+                      <td>Price</td>
+                    </tr>
                     </thead>
                     <tbody>
-                      {prices.map(({ id, price, createdAt }) => (
-                          <tr>
-                            <td style={{ textAlign: "left" }}><Typography>{formatDate(new Date(createdAt))}</Typography></td>
-                            <td><Typography>${price}</Typography></td>
-                          </tr>
-                      ))}
+                    {prices.map(({ id, price, createdAt }) => (
+                        <tr key={id}>
+                          <td style={{ textAlign: "left" }}><Typography>{formatDate(new Date(createdAt))}</Typography></td>
+                          <td><Typography>${price}</Typography></td>
+                        </tr>
+                    ))}
                     </tbody>
                   </table>
                 </Box>
@@ -127,7 +127,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
               </TabPanel>
             </TabContext>
           </Box>
-          <Box sx={{ pl: 4, pr: 4 }}>
+          <Box>
             <TabContext value={tab}>
               <TabList
                 onChange={(_: any, i: string) => {
@@ -137,15 +137,15 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                 sx={{ width: "fit-content", m: "auto" }}
                 centered
               >
-                <Tab label="Buy" value="1" />
-                <Tab label="Buy Schedule" value="2" />
-                <Tab label="Sell" value="3" />
+                <Tab label="Покупка" value="1" />
+                <Tab label="Запланировать" value="2" />
+                <Tab label="Продажа" value="3" />
               </TabList>
               <TabPanel value="1">
                 <TextField
                   sx={{ mb: 2 }}
                   type="number"
-                  label="Amount"
+                  label="Количество"
                   fullWidth
                   value={buyAmount}
                   onChange={(e) => {
@@ -176,15 +176,15 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                     )
                   }
                 >
-                  Buy
+                  Купить
                 </Button>
               </TabPanel>
               <TabPanel value="2">
                 <TextField
                   sx={{ mb: 2 }}
                   type="number"
-                  label="Amount"
                   placeholder="Your amount"
+                  label="Количество"
                   fullWidth
                   value={buyWhenAmount}
                   onChange={(e) => {
@@ -194,7 +194,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                 <TextField
                   sx={{ mb: 2 }}
                   type="number"
-                  label="Price"
+                  label="Цена"
                   fullWidth
                   value={buyWhenPrice.toString()}
                   placeholder="Your price"
@@ -228,14 +228,14 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                     )
                   }
                 >
-                  Buy Schedule
+                  Запланированная покупка
                 </Button>
               </TabPanel>
               <TabPanel value="3">
                 <TextField
                   sx={{ mb: 2 }}
                   type="number"
-                  label="Amount"
+                  label="Количество"
                   fullWidth
                   value={sellAmount}
                   onChange={(e) =>
@@ -266,7 +266,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                     )
                   }
                 >
-                  Sell
+                  Продать
                 </Button>
               </TabPanel>
             </TabContext>
@@ -322,7 +322,7 @@ const StocksList: React.FC<{ filter?: string }> = ({ filter = "" }) => {
         }}
       >
         <Typography variant="h5" component="div">
-          No stocks
+          Акций нет
         </Typography>
       </Box>
     );

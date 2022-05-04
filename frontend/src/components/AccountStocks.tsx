@@ -34,7 +34,7 @@ const Stock: React.FC<{ stock: Stock }> = (
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">info</Button>
+        <Button size="small">информация</Button>
       </CardActions>
     </Card>
   );

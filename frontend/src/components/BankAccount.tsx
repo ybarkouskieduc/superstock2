@@ -60,7 +60,7 @@ const CreateBankReview: React.FC<{ bankId?: number }> = ({ bankId }) => {
 
   return (
     <>
-      <Chip label="Add review" onClick={handleOpen} />
+      <Chip label="Оставить отзыв" onClick={handleOpen} />
       <Modal
         open={open}
         onClose={handleClose}
@@ -69,7 +69,7 @@ const CreateBankReview: React.FC<{ bankId?: number }> = ({ bankId }) => {
       >
         <Box sx={style}>
           <Typography variant="h5" sx={{ textAlign: "center" }}>
-            Bank review
+            Отзывы
           </Typography>
           <Rating
             sx={{ mb: 2 }}
@@ -78,7 +78,7 @@ const CreateBankReview: React.FC<{ bankId?: number }> = ({ bankId }) => {
           />
           <TextField
             sx={{ mb: 2 }}
-            label="Review"
+            label="Отзыв"
             fullWidth
             multiline
             rows={3}
@@ -151,7 +151,7 @@ const CreateBankAccount: React.FC = () => {
 
   return (
     <>
-      <Chip label="Add account" onClick={handleOpen} />
+      <Chip label="Создать счет" onClick={handleOpen} />
       <Modal
         open={open}
         onClose={handleClose}
@@ -258,7 +258,7 @@ const BankAccount: React.FC = () => {
         <>
           <Box sx={style}>
             <Typography variant="h5" sx={{ textAlign: "center" }}>
-              Accounts
+              Счета
             </Typography>
             {bankAccount.map((account) => (
               <Typography
@@ -276,11 +276,11 @@ const BankAccount: React.FC = () => {
             </Box>
             <Box sx={{ mt: 2 }}>
               <FormControl sx={{ mt: 1, mb: 1 }} fullWidth>
-                <InputLabel id="demo-simple-select-label">Bank</InputLabel>
+                <InputLabel id="demo-simple-select-label">Банк</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  label="Bank"
+                  label="Банк"
                   value={exchangeBank}
                   onChange={(e) => setExchangeBank(+e.target.value)}
                 >
@@ -318,11 +318,11 @@ const BankAccount: React.FC = () => {
             </Box>
             <Box sx={{ display: "flex", mt: 1, mb: 2 }}>
               <FormControl sx={{ mr: 2 }} fullWidth>
-                <InputLabel id="demo-simple-select-label">From</InputLabel>
+                <InputLabel id="demo-simple-select-label">Из</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  label="From"
+                  label="Из"
                   value={fromCurrency}
                   onChange={(e) => setFromCurrency(e.target.value)}
                 >
@@ -334,11 +334,11 @@ const BankAccount: React.FC = () => {
                 </Select>
               </FormControl>
               <FormControl sx={{ mr: 2 }} fullWidth>
-                <InputLabel id="demo-simple-select-label">To</InputLabel>
+                <InputLabel id="demo-simple-select-label">В</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  label="To"
+                  label="В"
                   value={toCurrency}
                   onChange={(e) => setToCurrency(e.target.value)}
                   disabled={!fromCurrency}
@@ -367,7 +367,7 @@ const BankAccount: React.FC = () => {
                 disabled={!fromCurrency || !toCurrency || !exchangeAmount}
                 onClick={handleExchange}
               >
-                Exchange
+                Обменять
               </Button>
               <Typography sx={{ textAlign: "center", color: "#e50707" }}>{error && error}</Typography>
             </Box>
