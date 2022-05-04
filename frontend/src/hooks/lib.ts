@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import { useAccountFind } from "./queries";
 
 export const useUserId = () =>
-  useLocalStorageState<null | number>("user-id", {
-    defaultValue: null,
+  useLocalStorageState<undefined | number>("user-id", {
+    defaultValue: undefined,
   });
 
 export const useUserAccount = (): [

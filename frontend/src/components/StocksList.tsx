@@ -19,7 +19,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import {
   useStock,
   useStockAccountFind,
-  useStockPriceFind,
+  useStockPriceFind, useStockPriceProfit,
   useUserBuyStock,
   useUserBuyStockSchedule,
   useUserSellStock,
@@ -68,6 +68,13 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
 
   const { data: prices = [] } = useStockPriceFind({ stockId: stock.id });
 
+  const [
+    { data: halfOfHourProfit },
+    { data: hourProfit },
+    { data: dayProfit},
+    { data: weekProfit}
+  ] = useStockPriceProfit({ stockId: stock.id, userId: userId });
+
   const { mutate: sell } = useUserSellStock();
   const { mutate: buy } = useUserBuyStock();
   const { mutate: buySchedule } = useUserBuyStockSchedule();
@@ -96,16 +103,17 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                   sx={{ width: "fit-content", m: "auto" }}
                   centered
               >
-                <Tab label="Prices history" value="1" />
-                <Tab label="About" value="2" />
+                <Tab label="История цен" value="1" />
+                <Tab label="Описание" value="2" />
+                <Tab label="Активность" value="3" />
               </TabList>
               <TabPanel value="1">
                 <Box sx={{ maxHeight: 300, overflow: "auto", p: 1, pr: 2 }}>
                   <table style={{ textAlign: "center", width: "100%" }}>
                     <thead style={{ fontWeight: "bold", fontSize: "18px", fontFamily: "Roboto" }}>
                     <tr>
-                      <td>Date</td>
-                      <td>Price</td>
+                      <td>Дата</td>
+                      <td>Цена</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -121,8 +129,36 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
               </TabPanel>
               <TabPanel value="2">
                 <Box sx={{ m: 1, textAlign: "center" }}>
-                  <Typography sx={{ textAlign: "center" }}>About</Typography>
+                  <Typography sx={{ textAlign: "center" }}>Описание</Typography>
                   <Typography>{stock.description}</Typography>
+                </Box>
+              </TabPanel>
+              <TabPanel value="3">
+                <Box sx={{ m: 1, textAlign: "center" }}>
+                  {
+                    amount > 0 ? (
+                        <>
+                          <Box sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}>
+                            <Typography sx={{ textAlign: "center" }}>За полчаса</Typography>
+                            <Typography>{halfOfHourProfit}</Typography>
+                          </Box>
+                          <Box sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}>
+                            <Typography sx={{ textAlign: "center" }}>За час</Typography>
+                            <Typography>{hourProfit}</Typography>
+                          </Box>
+                          <Box sx={{ display: "flex", justifyContent: "space-between", mb: "20px" }}>
+                            <Typography sx={{ textAlign: "center" }}>За день</Typography>
+                            <Typography>{dayProfit}</Typography>
+                          </Box>
+                          <Box sx={{ display: "flex", justifyContent: "space-between",  }}>
+                            <Typography sx={{ textAlign: "center" }}>За неделю</Typography>
+                            <Typography>{weekProfit}</Typography>
+                          </Box>
+                        </>
+                    ) : (
+                        <Typography sx={{ textAlign: "center" }}>У вас нет активов данной компании.</Typography>
+                    )
+                  }
                 </Box>
               </TabPanel>
             </TabContext>
@@ -293,7 +329,7 @@ const Stock: React.FC<{ stock: Stock; amount?: number }> = ({
         <Typography variant="h5">{sign}</Typography>
         {!!amount && (
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            amount: {amount} (${amount * currentStockPrice})
+            Куплено: {amount} (${amount * currentStockPrice})
           </Typography>
         )}
       </CardContent>

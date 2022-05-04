@@ -55,6 +55,15 @@ const CreateBankReview: React.FC<{ bankId?: number }> = ({ bankId }) => {
     setRate(4);
     setReview("");
   };
+  const handleCreateReview = (bankId: number) => {
+    createReview({
+      userId: userId as number,
+      bankId,
+      rate,
+      review,
+    })
+    handleClose();
+  }
 
   if (!bankId) return null;
 
@@ -88,14 +97,7 @@ const CreateBankReview: React.FC<{ bankId?: number }> = ({ bankId }) => {
           <Button
             fullWidth
             disabled={!review || !rate}
-            onClick={() =>
-              createReview({
-                userId: userId as number,
-                bankId,
-                rate,
-                review,
-              })
-            }
+            onClick={() => handleCreateReview(bankId)}
           >
             Create
           </Button>
@@ -203,7 +205,7 @@ const CreateBankAccount: React.FC = () => {
 const BankAccount: React.FC = () => {
   const [fromCurrency, setFromCurrency] = useState("");
   const [toCurrency, setToCurrency] = useState("");
-  const [exchangeAmount, setExchangeAmount] = useState(0);
+  const [exchangeAmount, setExchangeAmount] = useState<number | string>(0);
   const [exchangeBank, setExchangeBank] = useState(0);
 
   const [error, setError] = useState('');
@@ -227,7 +229,7 @@ const BankAccount: React.FC = () => {
       bankId: +exchangeBank,
       currencyIn: fromCurrency,
       currencyOut: toCurrency,
-      amount: exchangeAmount,
+      amount: +exchangeAmount,
     }, {
       onError: (error) => {
         if (typeof (error as AxiosError).response?.data !== "string") {
@@ -357,7 +359,7 @@ const BankAccount: React.FC = () => {
                 type="number"
                 fullWidth
                 value={exchangeAmount}
-                onChange={(e) => setExchangeAmount(Math.abs(+e.target.value))}
+                onChange={(e) => setExchangeAmount(e.target.value ? Math.abs(+e.target.value): '')}
                 disabled={!fromCurrency || !toCurrency}
               />
             </Box>
@@ -388,6 +390,12 @@ const BankAccount: React.FC = () => {
                       backgroundColor: "rgba(0,0,0,0.02)",
                     }}
                   >
+                    <Typography
+                        sx={{ fontSize: 10, mt: 0.5 }}
+                        color="text.secondary"
+                    >
+                      {review.userId}
+                    </Typography>
                     <Rating value={review.rate} readOnly />
                     <Typography>{review.review}</Typography>
                     {!!review.createdAt && (

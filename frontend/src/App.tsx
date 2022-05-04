@@ -8,7 +8,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { Box, Button, TextField } from "@mui/material";
+import {Box, Button, TextField, Typography} from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 import { useUserCreate, useUserLogin } from "./hooks/queries";
@@ -40,6 +40,7 @@ const colors = {
   focused: "#265299",
 };
 
+// TODO: add validation
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +50,6 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [, setUserId] = useUserId();
-
   return (
     <Box
       sx={{
@@ -99,11 +99,35 @@ const LoginPage: React.FC = () => {
 const RegisterPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [error, setError] = useState("");
 
   const { mutate } = useUserCreate();
 
   const navigate = useNavigate();
   const [, setUserId] = useUserId();
+
+  const emailValidation = () => {
+      const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      if(!email || !regex.test(email)) {
+          setError("Невалидный адрес электронной почты")
+      }
+  }
+
+  const handleSubmit = () => {
+      emailValidation();
+      if (error) return;
+      mutate(
+          { username, password },
+          {
+              onSuccess: (data) => {
+                  setUserId(data.id as number);
+                  navigate("/");
+              },
+          }
+      )
+  }
 
   return (
     <Box
@@ -121,7 +145,14 @@ const RegisterPage: React.FC = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <TextField sx={{ m: 1 }} label="Email" type="email" />
+        <TextField
+            sx={{ m: 1 }}
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onBlur={emailValidation}
+        />
         <TextField
           sx={{ m: 1 }}
           label="Пароль"
@@ -131,23 +162,27 @@ const RegisterPage: React.FC = () => {
         />
         <Button
           sx={{ m: 1 }}
-          onClick={() =>
-            mutate(
-              { username, password },
-              {
-                onSuccess: (data) => {
-                  setUserId(data.id as number);
-                  navigate("/");
-                },
-              }
-            )
-          }
+          disabled={!!error || !password || !username || !email}
+          onClick={() => {
+              mutate(
+                  { username, password },
+                  {
+                      onSuccess: (data) => {
+                          setUserId(data.id as number);
+                          navigate("/");
+                      },
+                  }
+              )
+          }}
         >
-          Register
+          Регистрация
         </Button>
         <Link to="/" style={{ textAlign: "center" }}>
-          login
+          Логин
         </Link>
+          <Typography sx={{ mt: "20px", color: "#ef0808", textAlign: "center" }}>
+              {error}
+          </Typography>
       </Box>
     </Box>
   );
@@ -232,7 +267,7 @@ const MainLayout: React.FC = () => {
         ))}
         <LogoutIcon
           onClick={() => {
-            setUserId(null);
+            setUserId(undefined);
             navigate("/");
           }}
           sx={{
@@ -251,16 +286,18 @@ const MainLayout: React.FC = () => {
 
 const App: React.FC = () => {
   const [userId] = useUserId();
+    console.log(userId)
+  if (userId === undefined){
 
-  if (userId === null)
-    return (
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route path="" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
-        </Route>
-      </Routes>
-    );
+      return (
+          <Routes>
+              <Route path="/" element={<MainLayout />}>
+                  <Route path="" element={<LoginPage />} />
+                  <Route path="register" element={<RegisterPage />} />
+              </Route>
+          </Routes>
+      );
+  }
 
   return (
     <Routes>

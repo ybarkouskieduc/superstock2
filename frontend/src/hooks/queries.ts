@@ -1,11 +1,16 @@
 import axios from "axios";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueries, useQuery, useQueryClient } from "react-query";
+import { toIsoString } from "../helpers/dateHelper";
 
 const http = axios.create({ baseURL: "http://localhost:8082/api/v1" });
 
 export const QUERY_KEYS = {
   user: "user",
   userFind: "userFind",
+  userProfitHalfOfHour: "userProfitHalfOfHour",
+  userProfitHour: "userProfitHour",
+  userProfitDay: "userProfitDay",
+  userProfitWeek: "userProfitWeek",
 
   account: "account",
   accountFind: "accountFind",
@@ -324,6 +329,76 @@ export const useStockPriceFind = (params: {
       >("stock/price/find", { params })
       .then(({ data }) => data)
   );
+
+export const useStockPriceProfit = (params: {
+    stockId?: number /** Format: int64 */;
+    userId?: number;
+    dateFrom?: string;
+    dateTo?: string;
+}) => {
+    const timePeriods = {
+        halfOfHour(): string {
+            const date = new Date();
+            date.setMinutes(date.getMinutes() - 30);
+            return toIsoString(date);
+        },
+        hour(): string {
+            const date = new Date();
+            date.setHours(date.getHours() - 1);
+            return toIsoString(date);
+        },
+        day(): string {
+            const date = new Date();
+            date.setHours(date.getHours() - 24);
+            return toIsoString(date);
+        },
+        week(): string {
+            const date = new Date();
+            date.setHours(date.getHours() - (24 * 7));
+            return toIsoString(date);
+        }
+    }
+
+    const queryFn = (dateFrom: string) => {
+        params.dateFrom = dateFrom;
+        params.dateTo = toIsoString(new Date());
+        return http.get<
+            {
+                stockName?: string,
+                stockId?: number,
+                profit: number
+            }
+            >("user/flow/profit/stock", { params })
+            .then(({ data }) => data.profit)
+    }
+
+    return useQueries([
+        {
+            queryKey: [QUERY_KEYS.userProfitHalfOfHour, params],
+            queryFn() {
+                return queryFn(timePeriods.halfOfHour());
+            }
+        },
+        {
+            queryKey: [QUERY_KEYS.userProfitHour, params],
+            queryFn() {
+                return queryFn(timePeriods.hour());
+            }
+        },
+        {
+            queryKey: [QUERY_KEYS.userProfitDay, params],
+            queryFn() {
+                return queryFn(timePeriods.day());
+            }
+        },
+        {
+            queryKey: [QUERY_KEYS.userProfitWeek, params],
+            queryFn() {
+                return queryFn(timePeriods.week());
+            }
+        }
+    ]);
+}
 
 export const useStockAccountFind = (params: {
   id?: number /** Format: int64 */;
