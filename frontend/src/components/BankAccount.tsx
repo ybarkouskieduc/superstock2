@@ -201,7 +201,18 @@ const BankAccount: React.FC = () => {
 
   const [{ data: bankAccount = [] }, usdAmount] = useUserAccount();
   const [userId] = useUserId();
-  const { mutate: exchange } = useUserExchangeCurrency();
+  const { mutate: exchange, error } = useUserExchangeCurrency();
+
+  const handleExchange = (): void => {
+    exchange({
+      userId: userId as number,
+      bankId: +exchangeBank,
+      currencyIn: fromCurrency,
+      currencyOut: toCurrency,
+      amount: exchangeAmount,
+    });
+    console.log('[INFO]error(incomponent)', error)
+  }
 
   const { data: banks = [] } = useBank();
   const { data: banksRates = [] } = useBankExchange();
@@ -329,15 +340,7 @@ const BankAccount: React.FC = () => {
               <Button
                 fullWidth
                 disabled={!fromCurrency || !toCurrency || !exchangeAmount}
-                onClick={() =>
-                  exchange({
-                    userId: userId as number,
-                    bankId: +exchangeBank,
-                    currencyIn: fromCurrency,
-                    currencyOut: toCurrency,
-                    amount: exchangeAmount,
-                  })
-                }
+                onClick={handleExchange}
               >
                 Exchange
               </Button>

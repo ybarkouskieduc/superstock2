@@ -353,6 +353,7 @@ const apiBank = () => () =>
       }[]
     >("bank")
     .then(({ data }) => data);
+
 export const useBank = () => useQuery(QUERY_KEYS.bank, apiBank());
 
 export const useBankReviewFind = (params: {
@@ -420,6 +421,7 @@ const apiBankExchange = () => () =>
       }[]
     >("bank/exchange")
     .then(({ data }) => data);
+
 export const useBankExchange = () =>
   useQuery(QUERY_KEYS.bankExchange, apiBankExchange());
 
@@ -577,7 +579,7 @@ export const useUserExchangeCurrency = () => {
     {
       onSuccess: () => {
         qc.invalidateQueries();
-      },
+      }
     }
   );
 };

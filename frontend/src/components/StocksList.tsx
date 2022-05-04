@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { AxiosError } from "axios";
 import {
   Box,
   Button,
@@ -23,8 +25,8 @@ import {
   useUserBuyStockSchedule,
   useUserSellStock,
 } from "../hooks/queries";
-import { useUserAccount, useUserId } from "../hooks/lib";
-import { useState } from "react";
+import { useUserId } from "../hooks/lib";
+
 
 type Stock = {
   id?: number;
@@ -52,12 +54,15 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
     setTab("1");
   };
 
-  const [sellAmount, setSellAmount] = useState(0);
-  const [buyAmount, setBuyAmount] = useState(0);
-  const [buyWhenAmount, setBuyWhenAmount] = useState(0);
-  const [buyWhenPrice, setBuyWhenPrice] = useState(0);
+  const [sellAmount, setSellAmount] = useState<number | string>(0);
+  const [buyAmount, setBuyAmount] = useState<number | string>(0);
+  const [buyWhenAmount, setBuyWhenAmount] = useState<number | string>(0);
+  const [buyWhenPrice, setBuyWhenPrice] = useState<number | string>(0);
+
+  const [error, setError] = useState('');
 
   const [tab, setTab] = useState("1");
+  const [infoTab, setInfoTab] = useState("1");
 
   const [userId] = useUserId();
 
@@ -66,8 +71,6 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
   const { mutate: sell } = useUserSellStock();
   const { mutate: buy } = useUserBuyStock();
   const { mutate: buySchedule } = useUserBuyStockSchedule();
-
-  const [, usdAmount] = useUserAccount();
 
   return (
     <>
@@ -84,29 +87,53 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
           <Typography variant="h5" sx={{ textAlign: "center" }}>
             {stock.name} ({stock.sign}) ${stock.currentStockPrice}
           </Typography>
-          <Box sx={{ display: "flex" }}>
-            <Box sx={{ m: 1 }}>
-              <Typography sx={{ textAlign: "center" }}>
-                Prices history
-              </Typography>
-              <Box sx={{ maxHeight: 300, overflow: "auto", p: 1, pr: 2 }}>
-                {prices.map(({ id, price, createdAt }) => (
-                  <Box key={id} sx={{ display: "flex" }}>
-                    <Typography>{formatDate(new Date(createdAt))}</Typography>
-                    <Typography sx={{ ml: 2 }}>${price}</Typography>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-            <Box sx={{ m: 1 }}>
-              <Typography sx={{ textAlign: "center" }}>About</Typography>
-              <Typography>{stock.description}</Typography>
-            </Box>
+          <Box>
+            <TabContext value={infoTab}>
+              <TabList
+                  onChange={(_: any, i: string) => {
+                    setInfoTab(i);
+                  }}
+                  sx={{ width: "fit-content", m: "auto" }}
+                  centered
+              >
+                <Tab label="Prices history" value="1" />
+                <Tab label="About" value="2" />
+              </TabList>
+              <TabPanel value="1">
+                <Box sx={{ maxHeight: 300, overflow: "auto", p: 1, pr: 2 }}>
+                  <table style={{ textAlign: "center", width: "100%" }}>
+                    <thead style={{ fontWeight: "bold", fontSize: "18px" }}>
+                      <tr>
+                        <td>Date</td>
+                        <td>Price</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {prices.map(({ id, price, createdAt }) => (
+                          <tr>
+                            <td style={{ textAlign: "left" }}><Typography>{formatDate(new Date(createdAt))}</Typography></td>
+                            <td><Typography>${price}</Typography></td>
+                          </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </Box>
+              </TabPanel>
+              <TabPanel value="2">
+                <Box sx={{ m: 1, textAlign: "center" }}>
+                  <Typography sx={{ textAlign: "center" }}>About</Typography>
+                  <Typography>{stock.description}</Typography>
+                </Box>
+              </TabPanel>
+            </TabContext>
           </Box>
           <Box sx={{ pl: 4, pr: 4 }}>
             <TabContext value={tab}>
               <TabList
-                onChange={(_: any, i: string) => setTab(i)}
+                onChange={(_: any, i: string) => {
+                  setTab(i);
+                  setError('');
+                }}
                 sx={{ width: "fit-content", m: "auto" }}
                 centered
               >
@@ -121,11 +148,9 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                   label="Amount"
                   fullWidth
                   value={buyAmount}
-                  onChange={(e) =>
-                    Math.abs(+e.target.value) *
-                      (stock.currentStockPrice || 1) <=
-                      usdAmount && setBuyAmount(Math.abs(+e.target.value))
-                  }
+                  onChange={(e) => {
+                    setBuyAmount(e.target.value ? Math.abs(+e.target.value) : '')
+                  }}
                 />
                 <Button
                   fullWidth
@@ -134,12 +159,19 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                       {
                         userId: userId as number,
                         stockId: stock.id as number,
-                        amount: buyAmount,
+                        amount: +buyAmount,
                       },
                       {
                         onSuccess: () => {
                           setBuyAmount(0);
                         },
+                        onError: (error) => {
+                          if (typeof (error as AxiosError).response?.data !== "string") {
+                            setError('Проблемы на сервере')
+                          } else {
+                            setError((error as AxiosError).response?.data)
+                          }
+                        }
                       }
                     )
                   }
@@ -152,21 +184,23 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                   sx={{ mb: 2 }}
                   type="number"
                   label="Amount"
+                  placeholder="Your amount"
                   fullWidth
                   value={buyWhenAmount}
-                  onChange={(e) =>
-                    Math.abs(+e.target.value) *
-                      (stock.currentStockPrice || 1) <=
-                      usdAmount && setBuyWhenAmount(Math.abs(+e.target.value))
-                  }
+                  onChange={(e) => {
+                    setBuyWhenAmount(e.target.value ? Math.abs(+e.target.value) : '')
+                  }}
                 />
                 <TextField
                   sx={{ mb: 2 }}
                   type="number"
                   label="Price"
                   fullWidth
-                  value={buyWhenPrice}
-                  onChange={(e) => setBuyWhenPrice(Math.abs(+e.target.value))}
+                  value={buyWhenPrice.toString()}
+                  placeholder="Your price"
+                  onChange={(e) => {
+                    setBuyWhenPrice(e.target.value ? Number(e.target.value) : '')
+                  }}
                 />
                 <Button
                   fullWidth
@@ -175,14 +209,21 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                       {
                         userId: userId as number,
                         stockId: stock.id as number,
-                        amount: buyWhenAmount,
-                        desiredPriceInUSD: buyWhenPrice,
+                        amount: +buyWhenAmount,
+                        desiredPriceInUSD: +buyWhenPrice,
                       },
                       {
                         onSuccess: () => {
                           setBuyWhenAmount(0);
                           setBuyWhenPrice(0);
                         },
+                        onError: (error) => {
+                          if (typeof (error as AxiosError).response?.data !== "string") {
+                            setError('Проблемы на сервере')
+                          } else {
+                            setError((error as AxiosError).response?.data)
+                          }
+                        }
                       }
                     )
                   }
@@ -198,8 +239,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                   fullWidth
                   value={sellAmount}
                   onChange={(e) =>
-                    Math.abs(+e.target.value) <= amount &&
-                    setSellAmount(Math.abs(+e.target.value))
+                    setSellAmount(e.target.value ? Math.abs(+e.target.value) : '')
                   }
                 />
                 <Button
@@ -209,12 +249,19 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                       {
                         userId: userId as number,
                         stockId: stock.id as number,
-                        amount: sellAmount,
+                        amount: +sellAmount,
                       },
                       {
                         onSuccess: () => {
                           setSellAmount(0);
                         },
+                        onError: (error) => {
+                          if (typeof (error as AxiosError).response?.data !== "string") {
+                            setError('Проблемы на сервере')
+                          } else {
+                            setError((error as AxiosError).response?.data)
+                          }
+                        }
                       }
                     )
                   }
@@ -223,6 +270,7 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
                 </Button>
               </TabPanel>
             </TabContext>
+            <Typography sx={{ textAlign: "center", color: "#e50707" }}>{error && error}</Typography>
           </Box>
         </Box>
       </Modal>
