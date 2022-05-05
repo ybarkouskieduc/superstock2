@@ -280,9 +280,7 @@ const MainLayout: React.FC = () => {
 
 const App: React.FC = () => {
   const [userId] = useUserId();
-    console.log(userId)
   if (userId === undefined){
-
       return (
           <Routes>
               <Route path="/" element={<MainLayout />}>

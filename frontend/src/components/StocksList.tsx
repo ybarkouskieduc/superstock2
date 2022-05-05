@@ -11,6 +11,18 @@ import {
   Typography,
   Tab,
 } from "@mui/material";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { AxiosError } from "axios";
+
 
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -25,8 +37,37 @@ import {
   useUserSellStock,
 } from "../hooks/queries";
 import { useUserId } from "../hooks/lib";
-import {AxiosError} from "axios";
 
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Tooltip,
+    Legend
+);
+
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      display: false
+    },
+    title: {
+      display: false,
+    },
+  },
+  scales: {
+    x: {
+      ticks: {
+        display: false,
+      },
+      grid: {
+        display: false,
+      }
+    },
+  }
+};
 
 type Stock = {
   id?: number;
@@ -72,6 +113,17 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
   const { mutate: buy } = useUserBuyStock();
   const { mutate: buySchedule } = useUserBuyStockSchedule();
 
+  const data = {
+    labels: prices.slice(-32).map(({ createdAt }) => formatDate(new Date(createdAt))),
+    datasets: [{
+      labels: 'Цена',
+      data: prices.slice(-32).map(({ price }) => price),
+      borderColor: 'rgb(53, 162, 235)',
+      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      fill: true,
+    }]
+  }
+
   return (
     <>
       <Button size="small" onClick={handleOpen}>
@@ -101,22 +153,10 @@ const StockModal: React.FC<{ stock: Stock; amount?: number }> = ({
               </TabList>
               <TabPanel value="1">
                 <Box sx={{ maxHeight: 300, overflow: "auto", p: 1, pr: 2 }}>
-                  <table style={{ textAlign: "center", width: "100%" }}>
-                    <thead style={{ fontWeight: "bold", fontSize: "18px" }}>
-                    <tr>
-                      <td>Дата</td>
-                      <td>Цена</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {prices.map(({ id, price, createdAt }) => (
-                        <tr key={id}>
-                          <td style={{ textAlign: "left" }}><Typography>{formatDate(new Date(createdAt))}</Typography></td>
-                          <td><Typography>${price}</Typography></td>
-                        </tr>
-                    ))}
-                    </tbody>
-                  </table>
+                  <Line
+                      data={data}
+                      options={options}
+                  />
                 </Box>
               </TabPanel>
               <TabPanel value="2">
@@ -361,7 +401,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: "60%",
   bgcolor: "background.paper",
   borderRadius: 4,
   boxShadow: 24,
