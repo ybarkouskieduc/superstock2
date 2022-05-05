@@ -291,11 +291,6 @@ const Stock: React.FC<{ stock: Stock; amount?: number }> = ({
           {name} ${currentStockPrice}
         </Typography>
         <Typography variant="h5">{sign}</Typography>
-        {!!amount && (
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Куплено: {amount} (${amount * currentStockPrice})
-          </Typography>
-        )}
       </CardContent>
       <CardActions>
         <StockModal stock={stock} amount={amount} />

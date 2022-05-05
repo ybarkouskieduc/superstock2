@@ -120,7 +120,7 @@ const PortfolioListItem: React.FC<{
     return stock && (
         <TableRow>
             <TableCell>
-                <Typography sx={{ fontSize: "16px", fontWeight: "600" }}>
+                <Typography variant="h5">
                     {stock.sign}
                 </Typography>
             </TableCell>
