@@ -17,6 +17,7 @@ import BankAccount from "./components/BankAccount";
 import SearchInput from "./components/SearchInput";
 import StockTransactionsList from "./components/StockTransactionsList";
 import BankExchangeTransactionsList from "./components/BankExchangeTransactionsList";
+import {PortfolioList} from "./components/Portfolio";
 
 const menu = [
   {
@@ -190,6 +191,7 @@ const StocksPage: React.FC = () => {
         <SearchInput value={filter} onChange={setFilter} />
         <BankAccount />
       </Box>
+        <PortfolioList />
       <StocksList filter={filter} />
     </Box>
   );
