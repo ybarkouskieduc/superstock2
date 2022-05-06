@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import {
   Link,
   Outlet,
@@ -18,6 +18,7 @@ import SearchInput from "./components/SearchInput";
 import StockTransactionsList from "./components/StockTransactionsList";
 import BankExchangeTransactionsList from "./components/BankExchangeTransactionsList";
 import {PortfolioList} from "./components/Portfolio";
+import {AxiosError} from "axios";
 
 const menu = [
   {
@@ -40,15 +41,15 @@ const colors = {
   focused: "#265299",
 };
 
-const LoginPage: React.FC = () => {
+const LoginPage: React.FC<{ setUserId: (userId: number) => void }> = ({ setUserId }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | undefined>();
 
   const { mutate } = useUserLogin();
 
   const navigate = useNavigate();
 
-  const [, setUserId] = useUserId();
   return (
     <Box
       sx={{
@@ -56,6 +57,7 @@ const LoginPage: React.FC = () => {
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
+        flexDirection: "column",
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -83,6 +85,13 @@ const LoginPage: React.FC = () => {
                   setUserId(data.id as number);
                   navigate("/");
                 },
+                  onError: (error) => {
+                    if ((error as AxiosError).response?.data) {
+                        setError((error as AxiosError).response?.data)
+                    } else {
+                        setError("Проблема на сервере")
+                    }
+                  }
               }
             )
           }
@@ -93,10 +102,13 @@ const LoginPage: React.FC = () => {
           РЕГИСТРАЦИЯ
         </Link>
       </Box>
+        <Typography sx={{ mt: "20px", color: "#ef0808", textAlign: "center", width: "auto" }}>
+            {error}
+        </Typography>
     </Box>
   );
 };
-const RegisterPage: React.FC = () => {
+const RegisterPage: React.FC<{ setUserId: (userId: number) => void }> = ({ setUserId }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -106,7 +118,6 @@ const RegisterPage: React.FC = () => {
   const { mutate } = useUserCreate();
 
   const navigate = useNavigate();
-  const [, setUserId] = useUserId();
 
   const emailValidation = () => {
       const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -225,9 +236,9 @@ const BankingPage: React.FC = () => {
   );
 };
 
-const MainLayout: React.FC = () => {
+const MainLayout: React.FC<{ setUserId: (userId: number | undefined) => void }> = ({ setUserId }) => {
   const { pathname } = useLocation();
-  const [userId, setUserId] = useUserId();
+  const [userId] = useUserId();
 
   const navigate = useNavigate();
 
@@ -279,13 +290,14 @@ const MainLayout: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  const [userId] = useUserId();
-  if (userId === undefined){
+  const [userId, setUserId] = useUserId();
+
+  if (!userId){
       return (
           <Routes>
-              <Route path="/" element={<MainLayout />}>
-                  <Route path="" element={<LoginPage />} />
-                  <Route path="register" element={<RegisterPage />} />
+              <Route path="/" element={<MainLayout setUserId={setUserId} />}>
+                  <Route path="" element={<LoginPage setUserId={setUserId} />} />
+                  <Route path="register" element={<RegisterPage setUserId={setUserId} />} />
               </Route>
           </Routes>
       );
@@ -293,7 +305,7 @@ const App: React.FC = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
+      <Route path="/" element={<MainLayout setUserId={setUserId} />}>
         <Route path="" element={<StocksPage />} />
         <Route path="operations" element={<OperationsPage />} />
         <Route path="banking" element={<BankingPage />} />

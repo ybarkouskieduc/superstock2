@@ -330,12 +330,17 @@ export const useStockPriceFind = (params: {
 export const useStockPriceProfit = (params: {
     stockId?: number /** Format: int64 */;
     userId?: number;
-    dateFrom?: string;
+    dateFrom?: string | number;
     dateTo?: string;
 }) => {
-    const dateFrom = new Date();
-    dateFrom.setHours(dateFrom.getHours() - 24 * 365);
-    params.dateFrom = toIsoString(dateFrom);
+    const { dateFrom } = params;
+    const newDateFrom = new Date();
+    if (dateFrom) {
+        newDateFrom.setHours(newDateFrom.getHours() - +dateFrom);
+    } else {
+        newDateFrom.setHours(newDateFrom.getHours() - 24 * 365);
+    }
+    params.dateFrom = toIsoString(newDateFrom);
     params.dateTo = toIsoString(new Date());
     return useQuery([QUERY_KEYS.userProfit, params], () => {
         return http.get<

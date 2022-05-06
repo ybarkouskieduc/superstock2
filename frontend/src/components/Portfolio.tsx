@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     Box,
     Card,
@@ -8,13 +7,18 @@ import {
     TableBody,
     TableCell,
     TableHead,
-    TableRow
+    TableRow,
+    Button,
 } from "@mui/material"
+import { useState } from "react";
+
 import { useStock, useStockAccountFind, useStockPriceProfit } from "../hooks/queries";
 import { useUserId } from "../hooks/lib";
 
 
-export const PortfolioList: React.FC<{}> = () => {
+export const PortfolioList: React.FC = () => {
+    const [profitPeriod, setProfitPeriod] = useState<number | undefined>();
+
     const [userId] = useUserId();
     const { data: stocks = [] } = useStock();
     const { data: accountStocks = [] } = useStockAccountFind({
@@ -50,9 +54,43 @@ export const PortfolioList: React.FC<{}> = () => {
         )
     }
     return (
-        <Box sx={{ width: "100%", textAlign: "left", mt: "24px", mb: "24px" }}>
-            <Typography sx={{ m: 1, ml: 4 }}>Портфель</Typography>
-            <Card sx={{ m: 1, width: "45%" }}>
+        <Box sx={{ width: "50%", textAlign: "left", mt: "24px", mb: "24px" }}>
+            <Box
+                sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+            >
+                <Typography sx={{ m: 1, ml: 4 }}>Портфель</Typography>
+                <Box>
+                    <Button
+                        sx={{ m: 1 }}
+                        onClick={() => setProfitPeriod(1)}
+                        variant={profitPeriod === 1 ? "contained" : "outlined"}
+                    >
+                        ЧАС
+                    </Button>
+                    <Button
+                        sx={{ m: 1 }}
+                        onClick={() => setProfitPeriod(24)}
+                        variant={profitPeriod === 24 ? "contained" : "outlined"}
+                    >
+                        ДЕНЬ
+                    </Button>
+                    <Button
+                        sx={{ m: 1 }}
+                        onClick={() => setProfitPeriod(24 * 7)}
+                        variant={profitPeriod === 24 * 7 ? "contained" : "outlined"}
+                    >
+                        НЕДЕЛЯ
+                    </Button>
+                    <Button
+                        sx={{ m: 1 }}
+                        onClick={() => setProfitPeriod(undefined)}
+                        variant={profitPeriod === undefined ? "contained" : "outlined"}
+                    >
+                        ВСЕ ВРЕМЯ
+                    </Button>
+                </Box>
+            </Box>
+            <Card sx={{ m: 1, width: "100%" }}>
                 <CardContent>
                     <Table>
                         <TableHead>
@@ -87,6 +125,7 @@ export const PortfolioList: React.FC<{}> = () => {
                                     amount={amount}
                                     stocks={stocks}
                                     userId={userId}
+                                    profitTime={profitPeriod}
                                 />
                             ))}
                         </TableBody>
@@ -100,7 +139,7 @@ export const PortfolioList: React.FC<{}> = () => {
                             Oбщая стоимость:
                         </Typography>
                         <Typography sx={{ fontWeight: "600" }}>
-                            {calculateTotalNetWorth()} <Typography sx={{ fontSize: "10px", display: "inline-block" }}>USD$</Typography>
+                            {calculateTotalNetWorth()} <Typography component={'span'} sx={{ fontSize: "10px", display: "inline-block" }}>USD$</Typography>
                         </Typography>
                     </Box>
                 </CardContent>
@@ -114,9 +153,10 @@ const PortfolioListItem: React.FC<{
     amount?: number,
     stocks: any[],
     userId?: number,
-}> = ({ stockId, amount, stocks, userId }) => {
+    profitTime?: number | undefined
+}> = ({ stockId, amount, stocks, userId, profitTime }) => {
     const stock = stocks.find(({ id }) => id === stockId);
-    const { data: profit } = useStockPriceProfit({ stockId, userId });
+    const { data: profit } = useStockPriceProfit({ stockId, userId, dateFrom: profitTime });
     return stock && (
         <TableRow>
             <TableCell>
@@ -131,12 +171,12 @@ const PortfolioListItem: React.FC<{
             </TableCell>
             <TableCell>
                 <Typography>
-                    {profit} <Typography sx={{ fontSize: "10px", display: "inline-block" }}>USD$</Typography>
+                    {profit} <Typography component={'span'} sx={{ fontSize: "10px", display: "inline-block" }}>USD$</Typography>
                 </Typography>
             </TableCell>
             <TableCell>
                 <Typography>
-                    {(stock.currentStockPrice || 0) * (amount || 0)} <Typography sx={{ fontSize: "10px", display: "inline-block" }}>USD$</Typography>
+                    {(stock.currentStockPrice || 0) * (amount || 0)} <Typography component={'span'} sx={{ fontSize: "10px", display: "inline-block" }}>USD$</Typography>
                 </Typography>
             </TableCell>
         </TableRow>

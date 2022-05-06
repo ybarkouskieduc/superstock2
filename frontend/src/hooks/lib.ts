@@ -1,12 +1,9 @@
-import useLocalStorageState from "use-local-storage-state";
+import { useSessionStorage } from "./useSessionStorage";
 import { useMemo } from "react";
 
 import { useAccountFind } from "./queries";
 
-export const useUserId = () =>
-  useLocalStorageState<undefined | number>("user-id", {
-    defaultValue: undefined,
-  });
+export const useUserId = () => useSessionStorage("user-id");
 
 export const useUserAccount = (): [
   ReturnType<typeof useAccountFind>,
